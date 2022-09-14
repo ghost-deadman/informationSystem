@@ -1,7 +1,7 @@
-package com.example.informationsystem.service;
+package com.example.informationSystem.service;
 
-import com.example.informationsystem.entity.Unit;
-import com.example.informationsystem.mapper.UnitMapper;
+import com.example.informationSystem.entity.Unit;
+import com.example.informationSystem.mapper.UnitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

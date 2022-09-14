@@ -1,7 +1,7 @@
-package com.example.informationsystem.mapper;
+package com.example.informationSystem.mapper;
 
-import com.example.informationsystem.entity.Unit;
-import com.example.informationsystem.service.UnitService;
+import com.example.informationSystem.entity.Unit;
+import com.example.informationSystem.service.UnitService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,7 +1,7 @@
-package com.example.informationsystem.mapper;
+package com.example.informationSystem.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.informationsystem.entity.Unit;
+import com.example.informationSystem.entity.Unit;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
