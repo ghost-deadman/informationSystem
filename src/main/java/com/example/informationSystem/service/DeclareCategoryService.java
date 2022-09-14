@@ -11,43 +11,40 @@ import java.util.List;
  * @author ：ghost
  * @date ：Created in 2022/9/14 16:01
  */
-@Service
-public class DeclareCategoryService {
+public interface DeclareCategoryService {
 
-    @Autowired
-    private DeclareCategoryMapper declareCategoryMapper;
+    /**
+     * 添加项目类别数据
+     * @param declareCategory 项目类别对象
+     * @return 是否成功
+     */
+    boolean addDeclareCategory(DeclareCategory declareCategory);
 
-    public boolean addDeclareCategory(DeclareCategory declareCategory){
+    /**
+     * 更新项目类别数据
+     * @param declareCategory 项目类别数据对象
+     * @return 是否成功
+     */
+    boolean updateDeclareCategory(DeclareCategory declareCategory);
 
-        declareCategoryMapper.insert(declareCategory);
+    /**
+     * 删除项目类别数据
+     * @param id 项目类别id
+     * @return 是否成功
+     */
+    boolean deleteDeclareCategoryById(String id);
 
-        return true;
+    /**
+     * 查询项目类别
+     * @param id 项目类别id
+     * @return 项目类别对象
+     */
+    DeclareCategory selectDeclareCategoryById(String id);
 
-    }
-
-    public boolean updateDeclareCategory(DeclareCategory declareCategory){
-
-        declareCategoryMapper.updateById(declareCategory);
-
-        return true;
-
-    }
-    public boolean deleteDeclareCategoryById(Integer id){
-
-        declareCategoryMapper.deleteById(id);
-
-        return true;
-
-    }
-    public DeclareCategory selectDeclareCategoryById(String id){
-
-        return declareCategoryMapper.selectById(id);
-
-    }
-    public List<DeclareCategory> selectAll(){
-
-        return declareCategoryMapper.selectList(null);
-
-    }
+    /**
+     * 查询所有项目类别数据
+     * @return 项目类别数组对象
+     */
+    List<DeclareCategory> selectAll();
 
 }

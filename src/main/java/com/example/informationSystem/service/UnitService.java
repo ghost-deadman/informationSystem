@@ -1,9 +1,6 @@
 package com.example.informationSystem.service;
 
 import com.example.informationSystem.entity.Unit;
-import com.example.informationSystem.mapper.UnitMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,46 +8,40 @@ import java.util.List;
  * @author ：ghost
  * @date ：Created in 2022/9/14 9:03
  */
-@Service
-public class UnitService {
+public interface UnitService {
 
-    @Autowired
-    private UnitMapper unitMapper;
+    /**
+     * 添加单位
+     * @param unit 单位对象
+     * @return 是否成功
+     */
+    boolean addUnit(Unit unit);
 
-    public boolean addUnit(Unit unit){
+    /**
+     * 删除单位
+     * @param id 单位id
+     * @return 是否成功
+     */
+    boolean deleteUnit(String id);
 
-        unitMapper.insert(unit);
+    /**
+     * 更新单位
+     * @param unit 单位数据
+     * @return 是否成功
+     */
+    boolean updateUnit(Unit unit);
 
-        return true;
+    /**
+     * 查询单位数据
+     * @param id 单位id
+     * @return 单位对象
+     */
+    Unit selectUnit(String id);
 
-    }
-
-    public boolean deleteUnit(String id){
-
-        unitMapper.deleteById(id);
-
-        return true;
-
-    }
-
-    public boolean updateUnit(Unit unit){
-
-        unitMapper.updateById(unit);
-
-        return true;
-
-    }
-
-    public Unit selectUnit(String id){
-
-        return unitMapper.selectById(id);
-
-    }
-
-    public List<Unit> selectAll(){
-
-        return unitMapper.selectList(null);
-
-    }
+    /**
+     * 查询所有单位数据
+     * @return 单位对象数组
+     */
+    List<Unit> selectAll();
 
 }
