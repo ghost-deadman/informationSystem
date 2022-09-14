@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -57,6 +58,15 @@ public class UnitServiceTest {
         Unit unit = unitService.selectUnit("68580b1b-5f05-4962-a770-911f1cbdc9c2");
 
         System.out.println(unit);
+
+    }
+
+    @Test
+    public void selectAllTest(){
+
+        List<Unit> unitList = unitService.selectAll();
+
+        System.out.println(unitList);
 
     }
 

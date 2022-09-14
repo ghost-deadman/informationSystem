@@ -5,6 +5,8 @@ import com.example.informationSystem.mapper.UnitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author ：ghost
  * @date ：Created in 2022/9/14 9:03
@@ -42,6 +44,12 @@ public class UnitService {
     public Unit selectUnit(String id){
 
         return unitMapper.selectById(id);
+
+    }
+
+    public List<Unit> selectAll(){
+
+        return unitMapper.selectList(null);
 
     }
 
