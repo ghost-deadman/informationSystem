@@ -2,7 +2,9 @@ package com.example.informationsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+/**
+ * @author pcdn
+ */
 @SpringBootApplication
 public class InformationSystemApplication {
 
