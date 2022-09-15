@@ -24,19 +24,19 @@ spring:
       connection-timeout: 3000
       # 测试连接是否可用的查询语句
       connection-test-query: select 1
-#  redis:
-#    #    host: 192.168.92.128
-#    host: 127.0.0.1
-#    port: 6379
-#    password:
-#    database: 0
-#    timeout: 10000ms
-#    lettuce:
-#      pool:
-#        max-active: 1024
-#        max-wait: 10000ms
-#        max-idle: 200
-#        min-idle: 5
+  redis:
+    #    host: 192.168.92.128
+    host: 127.0.0.1
+    port: 6379
+    password: 5555
+    database: 0
+    timeout: 10000ms
+    lettuce:
+      pool:
+        max-active: 1024
+        max-wait: 10000ms
+        max-idle: 200
+        min-idle: 5
 #  rabbitmq:
 #    username: guest
 #    password: guest
@@ -46,6 +46,9 @@ spring:
 #    publisher-confirm-type: correlated
 ##  消息失败回调
 #    publisher-returns: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 mybatis-plus:
   # 配置Mapper映射文件
@@ -57,14 +60,6 @@ mybatis-plus:
 # Mybatis SQL日志输出  打印方法接口所在的包
 logging:
   level:
-    com.cdh.server.mapper: debug
+    com.example.informationSystem.mapper: debug
 
-jwt:
-  # JWT存储的请求头
-  tokenHeader: Authorization
-  # JWT加密使用的秘钥
-  secret: yeb-secret
-  # JWT超时时间（60*60*24）
-  expiration: 604800
-  # JWT负载中拿到开头
-  tokenHead: Bearer
+
