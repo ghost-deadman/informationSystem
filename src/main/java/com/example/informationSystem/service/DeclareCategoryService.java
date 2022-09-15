@@ -1,6 +1,8 @@
 package com.example.informationSystem.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.informationSystem.entity.DeclareCategory;
+import com.example.informationSystem.entity.Unit;
 import com.example.informationSystem.mapper.DeclareCategoryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +48,12 @@ public interface DeclareCategoryService {
      * @return 项目类别数组对象
      */
     List<DeclareCategory> selectAll();
+
+    /**
+     * 分页查询
+     * @param current 页数
+     * @return 分页对象
+     */
+    IPage<DeclareCategory> selectPage(long current);
 
 }

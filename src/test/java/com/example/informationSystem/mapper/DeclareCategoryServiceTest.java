@@ -1,5 +1,7 @@
 package com.example.informationSystem.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.informationSystem.entity.DeclareCategory;
 import com.example.informationSystem.entity.Unit;
 import com.example.informationSystem.service.DeclareCategoryService;
@@ -69,6 +71,24 @@ public class DeclareCategoryServiceTest {
         List<DeclareCategory> declareCategoryList = declareCategoryService.selectAll();
 
         System.out.println(declareCategoryList);
+
+    }
+
+    @Test
+    public void selectPage(){
+
+        IPage<DeclareCategory> page = declareCategoryService.selectPage(1);
+
+        System.out.println("第几页" + page.getCurrent());
+
+        System.out.println("每页大小" + page.getSize());
+
+        System.out.println("总页数" + page.getPages());
+
+        System.out.println("数据数" + page.getTotal());
+
+        System.out.println("数据" + page.getRecords());
+
 
     }
 

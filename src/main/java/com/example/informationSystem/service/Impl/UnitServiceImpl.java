@@ -1,5 +1,7 @@
 package com.example.informationSystem.service.Impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.informationSystem.entity.Unit;
 import com.example.informationSystem.mapper.UnitMapper;
 import com.example.informationSystem.service.UnitService;
@@ -56,6 +58,17 @@ public class UnitServiceImpl implements UnitService {
     public List<Unit> selectAll(){
 
         return unitMapper.selectList(null);
+
+    }
+
+    @Override
+    public IPage<Unit> selectPage(long current) {
+
+        IPage<Unit> page = new Page<>(current,5);
+
+        unitMapper.selectPage(page,null);
+
+        return page;
 
     }
 

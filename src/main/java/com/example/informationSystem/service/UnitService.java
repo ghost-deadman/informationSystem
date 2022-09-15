@@ -1,5 +1,6 @@
 package com.example.informationSystem.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.informationSystem.entity.Unit;
 
 import java.util.List;
@@ -43,5 +44,12 @@ public interface UnitService {
      * @return 单位对象数组
      */
     List<Unit> selectAll();
+
+    /**
+     * 分页查询
+     * @param current 页数
+     * @return 分页对象
+     */
+    IPage<Unit> selectPage(long current);
 
 }

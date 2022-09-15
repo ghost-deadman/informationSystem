@@ -1,5 +1,7 @@
 package com.example.informationSystem.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.example.informationSystem.entity.DeclareCategory;
 import com.example.informationSystem.entity.Unit;
 import com.example.informationSystem.service.UnitService;
 import org.junit.jupiter.api.Test;
@@ -67,6 +69,24 @@ public class UnitServiceTest {
         List<Unit> unitList = unitService.selectAll();
 
         System.out.println(unitList);
+
+    }
+
+    @Test
+    public void selectPage(){
+
+        IPage<Unit> page = unitService.selectPage(1);
+
+        System.out.println("第几页" + page.getCurrent());
+
+        System.out.println("每页大小" + page.getSize());
+
+        System.out.println("总页数" + page.getPages());
+
+        System.out.println("数据数" + page.getTotal());
+
+        System.out.println("数据" + page.getRecords());
+
 
     }
 

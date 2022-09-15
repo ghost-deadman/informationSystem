@@ -1,6 +1,9 @@
 package com.example.informationSystem.service.Impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.informationSystem.entity.DeclareCategory;
+import com.example.informationSystem.entity.Unit;
 import com.example.informationSystem.mapper.DeclareCategoryMapper;
 import com.example.informationSystem.service.DeclareCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,7 @@ public class DeclareCategoryServiceImpl implements DeclareCategoryService {
         return true;
 
     }
+
     @Override
     public boolean deleteDeclareCategoryById(String id){
 
@@ -44,16 +48,29 @@ public class DeclareCategoryServiceImpl implements DeclareCategoryService {
         return true;
 
     }
+
     @Override
     public DeclareCategory selectDeclareCategoryById(String id){
 
         return declareCategoryMapper.selectById(id);
 
     }
+
     @Override
     public List<DeclareCategory> selectAll(){
 
         return declareCategoryMapper.selectList(null);
+
+    }
+
+    @Override
+    public IPage<DeclareCategory> selectPage(long current) {
+
+        IPage<DeclareCategory> page = new Page<>(current,5);
+
+        declareCategoryMapper.selectPage(page,null);
+
+        return page;
 
     }
 }
