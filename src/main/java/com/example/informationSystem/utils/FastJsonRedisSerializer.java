@@ -1,4 +1,4 @@
-package com.example.informationSystem.config;
+package com.example.informationSystem.utils;
 
 
 import com.alibaba.fastjson.JSON;

@@ -1,6 +1,6 @@
 package com.example.informationSystem.mapperTest;
 
-import com.example.informationSystem.config.JwtUtil;
+import com.example.informationSystem.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

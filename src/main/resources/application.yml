@@ -37,7 +37,11 @@ spring:
         max-wait: 10000ms
         max-idle: 200
         min-idle: 5
-#  rabbitmq:
+
+  session:
+    store-type: redis
+    timeout: 60
+  #  rabbitmq:
 #    username: guest
 #    password: guest
 #    host: 127.0.0.1
@@ -48,7 +52,9 @@ spring:
 #    publisher-returns: true
   mvc:
     pathmatch:
-      matching-strategy: ant_path_matcher
+      matching-strategy: ant_path_matcher # 解决swaggerUI不匹配接口
+
+
 
 mybatis-plus:
   # 配置Mapper映射文件

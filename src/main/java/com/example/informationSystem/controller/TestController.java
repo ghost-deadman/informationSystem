@@ -10,7 +10,7 @@ public class TestController {
 
     @RequestMapping("/test")
     @PreAuthorize("hasAuthority('sys:book:delete')")
-    public String hello() {
+    public String test() {
         return "test";
     }
 }

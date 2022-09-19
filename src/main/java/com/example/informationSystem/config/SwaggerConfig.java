@@ -1,25 +1,18 @@
 package com.example.informationSystem.config;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.ReflectionUtils;
-import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
-import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 @EnableSwagger2
@@ -30,9 +23,11 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .select()
                 //为当前包下的controller生成api文档
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.example.informationSystem.controller"))
                 .paths(PathSelectors.any())
-                .build();
+                .build()
+                .securityContexts(securityContexts())
+                .securitySchemes(securitySchemes());
     }
     private ApiInfo apiInfo() {
         //设置文档信息
@@ -44,9 +39,45 @@ public class SwaggerConfig {
                 .version("1.0")
                 .build();
     }
+
+
+    private List<SecurityContext> securityContexts() {
+        List<SecurityContext> res = new ArrayList<>();
+        // 设置需要登录认证的路径
+        res.add(getContextByPath("/user/logout"));
+        res.add(getContextByPath("/hello"));
+        res.add(getContextByPath("/test"));
+        return res;
+    }
+
+    private SecurityContext getContextByPath(String pathRegex) {
+        return SecurityContext.builder().securityReferences(defaultAuthPath())
+                .forPaths(PathSelectors.regex(pathRegex))
+                .build();
+    }
+
+    private List<SecurityReference> defaultAuthPath() {
+        List<SecurityReference> res = new ArrayList<>();
+        AuthorizationScope scope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] scopes = new AuthorizationScope[1];
+        scopes[0] = scope;
+        res.add(new SecurityReference("Authorization",scopes));
+        return res;
+    }
+
+    private List<SecurityScheme> securitySchemes() {
+        List<SecurityScheme> res = new ArrayList<>();
+        // 设置请求头信息
+        ApiKey apiKey = new ApiKey("Auth", "token", "Header");
+        res.add(apiKey);
+        return res;
+    }
+
+
     /**
      * 解决swagger在springboot2.7以后的空指针异常
      */
+    /*
     @Bean
     public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
         return new BeanPostProcessor() {
@@ -75,5 +106,5 @@ public class SwaggerConfig {
                 }
             }
         };
-    }
+    }*/
 }
