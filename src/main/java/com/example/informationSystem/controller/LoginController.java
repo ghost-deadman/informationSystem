@@ -49,8 +49,13 @@ public class LoginController {
             return Result.error("错误！请重新登录");
         } else {
             String userName = principal.getName();
-            System.out.println(userName);
+            System.out.println(userName + "123");
+            if (userName == null) {
+                return Result.error("错误！");
+            }
             User userInfo = loginService.getUserInfo(userName);
+            // 添加角色信息
+            userInfo.setRoles(loginService.getRoles(userInfo.getId()));
             return Result.success(userInfo);
         }
     }

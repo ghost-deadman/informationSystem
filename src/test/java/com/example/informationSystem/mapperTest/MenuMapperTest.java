@@ -1,6 +1,9 @@
 package com.example.informationSystem.mapperTest;
 
+import com.example.informationSystem.entity.Menu;
+import com.example.informationSystem.entity.Role;
 import com.example.informationSystem.mapper.MenuMapper;
+import com.example.informationSystem.mapper.RoleMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +14,8 @@ import java.util.List;
 public class MenuMapperTest {
     @Autowired
     private MenuMapper menuMapper;
+    @Autowired
+    private RoleMapper roleMapper;
 
     /**
      *  测试通过用户id获取用户权限菜单的方法
@@ -21,12 +26,25 @@ public class MenuMapperTest {
      */
     @Test
     public void testGetMenu() {
-        List<String> strings = menuMapper.selectPermsByUserId(1L);
+        List<Menu> strings = menuMapper.getMenusByUserId(1L);
         if (strings != null)
-            for (String string : strings) {
-                System.out.println(string);
+            for (Menu string : strings) {
+                System.out.println(string.getEnabled());
             }
         System.out.println("123");
     }
 
+    @Test
+    public void testGetMenuRole() {
+        menuMapper.getMenusByRole();
+    }
+
+
+    @Test
+    public void testRole() {
+        List<Role> roles = roleMapper.getRoles(1L);
+        for (Role role : roles) {
+            System.out.println(role.getEnabled());
+        }
+    }
 }

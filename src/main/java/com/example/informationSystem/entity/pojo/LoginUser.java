@@ -21,27 +21,14 @@ public class LoginUser implements UserDetails {
 
     private User user;
 
-    private List<String> permissions;
-
-    public LoginUser(User user, List<String> permissions) {
-        this.user = user;
-        this.permissions = permissions;
-    }
     @JSONField(serialize = false)
     private List<SimpleGrantedAuthority> authorities;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if (authorities == null) {
-            authorities = permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        }
-        //把permissions中的String类型的权限信息封装成SimpleGrantedAuthority对象
-//        List<GrantedAuthority> newList = new ArrayList<>();
-//        for (String permission : permissions) {
-//            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(permission);
-//            newList.add(authority);
-//        }
-        //函数式编程方法
-
+        authorities = user.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole_key()))
+                .collect(Collectors.toList());
         return authorities;
     }
 
@@ -52,7 +39,7 @@ public class LoginUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUserName();
+        return user.getUsername();
     }
 
     @Override
@@ -72,7 +59,7 @@ public class LoginUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.getEnable();
+        return true;
     }
 }
 

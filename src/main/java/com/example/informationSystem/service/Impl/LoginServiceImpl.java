@@ -2,9 +2,10 @@ package com.example.informationSystem.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.informationSystem.entity.Role;
 import com.example.informationSystem.entity.User;
-import com.example.informationSystem.entity.pojo.LoginUser;
 import com.example.informationSystem.entity.vo.UserVo;
+import com.example.informationSystem.mapper.RoleMapper;
 import com.example.informationSystem.mapper.UserMapper;
 import com.example.informationSystem.service.LoginService;
 import com.example.informationSystem.utils.JwtUtil;
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements LoginService {
@@ -37,6 +39,8 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RoleMapper roleMapper;
     @Override
     public Result login(UserVo user, HttpServletRequest request) {
 
@@ -62,12 +66,9 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-//        if(Objects.isNull(authenticate)){
-//            throw new RuntimeException("用户名或密码错误");
-//        }
-        //使用userid生成token
-        LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
-        String userId = loginUser.getUser().getId().toString();
+
+        User loginUser = (User) authenticate.getPrincipal();
+        String userId = loginUser.getId().toString();
         String jwt = JwtUtil.createJWT(userId);
         //authenticate存入redis
         redisCache.setCacheObject("login:"+userId,loginUser);
@@ -80,9 +81,10 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
     @Override
     public Result logout() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        Long userid = loginUser.getUser().getId();
+        User loginUser = (User) authentication.getPrincipal();
+        Long userid = loginUser.getId();
         redisCache.deleteObject("login:"+userid);
+        redisCache.deleteObject("menu:"+userid);
         return Result.success("退出成功");
     }
 
@@ -90,11 +92,17 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
     public User getUserInfo(String userName) {
         //根据用户名查询用户信息
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUserName,userName);
+        wrapper.eq(User::getUsername,userName);
         User user = userMapper.selectOne(wrapper);
         user.setPassword(null);
         return user;
     }
+
+    @Override
+    public List<Role> getRoles(Long id) {
+        return roleMapper.getRoles(id);
+    }
+
 
 }
 

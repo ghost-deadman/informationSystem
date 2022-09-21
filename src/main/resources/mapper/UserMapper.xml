@@ -8,7 +8,7 @@
         <result column="user_name" property="userName"/>
         <result column="nick_name" property="nickName"/>
         <result column="password" property="password"/>
-        <result column="enable" property="enable"/>
+        <result column="enabled" property="enabled"/>
         <result column="email" property="email"/>
         <result column="phonenumber" property="phonenumber"/>
         <result column="sex" property="sex"/>
@@ -24,7 +24,13 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_name, nick_name, password, enable, email, phonenumber, sex, avatar, user_type, create_by, create_time, update_by, update_time, del_flag
+        id, user_name, nick_name, password, enabled, email, phonenumber, sex, avatar, user_type, create_by, create_time, update_by, update_time, del_flag
     </sql>
 
+    <select id="getOneByUserName" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM sys_user
+        WHERE user_name = #{userName}
+    </select>
 </mapper>

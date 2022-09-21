@@ -1,17 +1,22 @@
 package com.example.informationSystem.config;
 
+import com.example.informationSystem.config.filter.CustomFilter;
+import com.example.informationSystem.config.filter.CustomUrlDecisionManger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -20,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)   //启用权限认证管理
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -32,8 +38,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationEntryPoint authenticationEntryPoint;
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
+    @Autowired
+    private CustomUrlDecisionManger customUrlDecisionManger;
+    @Autowired
+    private CustomFilter customFilter;
 
-
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(
+                "/user/login",
+                "/call",
+                "/yzm",
+                "/code",
+                "/css/**",
+                "/js/**",
+                "/index.html",
+                "favicon.ico",
+                "/doc.html",
+                "/webjars/**",
+                "/swagger-resources/**",
+                "/v2/api-docs/**",
+                "/captcha",
+                "/ws/**"
+        );
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -44,22 +72,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问
-                .antMatchers("/user/login",
-                        "/call",
-                        "/yzm",
-                        "/code",
-                        "/css/**",
-                        "/js/**",
-                        "/index.html",
-                        "favicon.ico",
-                        "/doc.html",
-                        "/webjars/**",
-                        "/swagger-resources/**",
-                        "/v2/api-docs/**",
-                        "/captcha",
-                        "/ws/**").permitAll()
+//                .antMatchers().permitAll()
                 // 除上面外的所有请求全部需要鉴权认证
-                .anyRequest().authenticated();
+                .anyRequest()
+                .authenticated()
+                // 动态权限配置
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setAccessDecisionManager(customUrlDecisionManger);
+                        object.setSecurityMetadataSource(customFilter);
+                        return object;
+                    }
+                })
+        ;
 
         //添加过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);

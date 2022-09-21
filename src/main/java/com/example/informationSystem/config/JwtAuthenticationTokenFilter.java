@@ -1,6 +1,6 @@
 package com.example.informationSystem.config;
 
-import com.example.informationSystem.entity.pojo.LoginUser;
+import com.example.informationSystem.entity.User;
 import com.example.informationSystem.utils.JwtUtil;
 import com.example.informationSystem.utils.RedisCache;
 import io.jsonwebtoken.Claims;
@@ -44,7 +44,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         //从redis中获取用户信息
         String redisKey = "login:" + userid;
-        LoginUser loginUser = redisCache.getCacheObject(redisKey);
+        User loginUser = redisCache.getCacheObject(redisKey);
+//        System.out.println("22222222222");
+//        System.out.println(loginUser);
         if(Objects.isNull(loginUser)){
             System.out.println("用户未登录");
             throw new RuntimeException("用户未登录");
@@ -58,5 +60,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         //放行
         filterChain.doFilter(request, response);
     }
+
+
 }
 

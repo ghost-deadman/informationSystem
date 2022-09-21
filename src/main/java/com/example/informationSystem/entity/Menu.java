@@ -61,12 +61,8 @@ public class Menu implements Serializable {
      * 是否启用（1正常 0停用）
      */
     @ApiModelProperty(value = "是否启用")
-    private Boolean enable;
-    /**
-     * 权限标识
-     */
-    @ApiModelProperty(value = "权限标识")
-    private String perms;
+    private Boolean enabled;
+
     /**
      * 菜单图标
      */
@@ -74,10 +70,10 @@ public class Menu implements Serializable {
     private String icon;
 
     /**
-     * 父id
+     * 是否需要权限
      */
-    @ApiModelProperty(value = "父id")
-    private Integer parentId;
+    @ApiModelProperty(value = "是否需要权限")
+    private Boolean requireAuth;
     /**
      * 是否删除（0未删除 1已删除）
      */
@@ -89,11 +85,8 @@ public class Menu implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    /**
-     * 子菜单
-     */
-    @ApiModelProperty(value = "子菜单")
-    @TableField(exist = false)
-    private List<Menu> children;
 
+    @ApiModelProperty(value = "角色列表")
+    @TableField(exist = false)
+    private List<Role> roles;
 }

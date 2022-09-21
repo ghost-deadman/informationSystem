@@ -5,13 +5,16 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -23,7 +26,7 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @TableName(value = "sys_user")
-public class User implements Serializable {
+public class User implements Serializable, UserDetails {
     private static final long serialVersionUID = -40356785423868312L;
 
     /**
@@ -51,11 +54,12 @@ public class User implements Serializable {
     @TableField("PASSWORD")
     private String password;
     /**
-     * 账号状态（0正常 1停用）
+     * 账号状态（1正常 0停用）
      */
-    @ApiModelProperty(value = "是否启用，1正常0停用")
-    @TableField("ENABLE")
-    private Boolean enable;
+    @Getter(AccessLevel.NONE)
+    @ApiModelProperty(value = "是否启用，1正常 0停用")
+    @TableField("ENABLED")
+    private Boolean enabled;
     /**
      * 邮箱
      */
@@ -116,5 +120,48 @@ public class User implements Serializable {
     @ApiModelProperty(value = "是否删除 0未删除 1已删除")
     @TableField("DEL_FLAG")
     private Boolean delFlag;
+
+    @ApiModelProperty(value = "角色")
+    @TableField(exist = false)
+    private List<Role> roles;
+
+    @ApiModelProperty(value = "认证")
+//    @JSONField(serialize = false)
+    @TableField(exist = false)
+    private List<SimpleGrantedAuthority> authorities;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        authorities = roles
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole_key()))
+                .collect(Collectors.toList());
+        return authorities;
+    }
+
+    @Override
+    public String getUsername() {
+        return userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 }
 
