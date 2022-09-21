@@ -1,7 +1,6 @@
 package com.example.informationSystem.mapper;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.informationSystem.entity.DeclareCategory;
 import com.example.informationSystem.entity.Unit;
 import com.example.informationSystem.service.UnitService;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,13 @@ public class UnitServiceTest {
 
     @Autowired
     private UnitService unitService;
+
+    @Test
+    public void test(){
+
+        System.out.println();
+
+    }
 
     @Test
     public void addUnitTest(){

@@ -4,8 +4,13 @@ spring:
     url: jdbc:mysql://localhost:3306/information_system?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: 123456
-
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher # 解决swaggerUI不匹配接口
 
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+file:
+  path: files
