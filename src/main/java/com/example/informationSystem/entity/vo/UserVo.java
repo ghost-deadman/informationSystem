@@ -26,6 +26,8 @@ public class UserVo {
     private String department;
     @ApiModelProperty(value = "登录类型",required = true)
     private String type;
+//    @ApiModelProperty(value = "验证码id",required = true)
+//    private String imgUUID;
 
 }
 

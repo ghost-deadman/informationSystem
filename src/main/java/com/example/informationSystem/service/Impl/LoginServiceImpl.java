@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements LoginService {
@@ -47,7 +48,14 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
         String username = user.getUserName();
         String password = user.getPassword();
         String code = user.getCode();
-        String captcha = (String) request.getSession().getAttribute("captcha");
+//        String imgUUID = user.getImgUUID();
+        String imgUUID = request.getRemoteAddr();
+        if (imgUUID == null) {
+            return Result.error("验证码已过期，刷新试试！");
+        }
+        System.out.println("uuid: "+imgUUID);
+//        String captcha = (String) request.getSession().getAttribute("captcha");
+        String captcha = redisCache.getCacheObject(imgUUID);
         System.out.println("code: " + code + "-----" + captcha);
         if (StringUtils.isEmpty(captcha)) {
             return Result.error("验证码已过期，刷新试试！");
@@ -63,7 +71,8 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
         if (!userDetails.isEnabled()){
             return Result.error("账号被禁用，请联系管理员");
         }
-
+        //删除验证码
+        redisCache.deleteObject(imgUUID);
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword());
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
@@ -71,7 +80,7 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
         String userId = loginUser.getId().toString();
         String jwt = JwtUtil.createJWT(userId);
         //authenticate存入redis
-        redisCache.setCacheObject("login:"+userId,loginUser);
+        redisCache.setCacheObject("login:"+userId,loginUser, 2, TimeUnit.HOURS);
         //把token响应给前端
         HashMap<String,String> map = new HashMap<>();
         map.put("token",jwt);

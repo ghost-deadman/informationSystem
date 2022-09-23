@@ -27,14 +27,15 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
 
     @Autowired
     private MenuService menuService;
-
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
-
+    private static List<Menu> menus;
     @Override
     public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
         //获取请求url
         String url = ((FilterInvocation) object).getRequestUrl();
-        List<Menu> menus = menuService.getMenusWithRole();
+        if (menus == null) {
+            menus = menuService.getMenusWithRole();
+        }
         if (menus != null) {
             for (Menu menu : menus) {
                 //判断url与角色是否匹配
