@@ -26,36 +26,35 @@ public class ProjectBudget {
     private String money;
 
     /**
-     * 建设单位负责人是否审核通过
+     * 建设部门意见id
      */
-    @TableField(value = "if_construction_pass")
-    private int ifConstructionPass;
+    @TableField(value = "opinion_id")
+    private String opinionId;
 
     /**
-     * 建设单位负责人意见
+     * 描述
      */
-    @TableField(value = "construction_opinion")
-    private String constructionOpinion;
+    @TableField(value = "describes")
+    private String describes;
+
 
     /**
-     * 归口部门管理员是否审核通过
+     * 日期
      */
-    @TableField(value = "if_relevant_pass")
-    private int ifRelevantPass;
-
-    /**
-     * 归口部门管理员审核意见
-     */
-    @TableField(value = "relevant_opinion")
-    private String relevantOpinion;
-
     @TableField(value = "date")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date date;
+
     /**
      * 是否删除
      */
     @TableField(value = "deleted")
     @TableLogic(value = "0",delval = "1")
     private Integer deleted;
+
+    /**
+     * 状态
+     */
+    @TableField(value = "status")
+    private int status;
+
 }

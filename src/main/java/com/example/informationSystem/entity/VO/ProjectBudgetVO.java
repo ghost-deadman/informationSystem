@@ -1,4 +1,4 @@
-package com.example.informationSystem.entity.VO;
+package com.example.informationSystem.entity.vo;
 
 import com.example.informationSystem.entity.ProjectBudget;
 import lombok.Data;
