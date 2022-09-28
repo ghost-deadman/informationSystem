@@ -33,33 +33,34 @@ public class NoticeServiceImpl implements NoticeService {
 
 
 
-
-//    @Override
-//    public List<Map<String, Object>> selectMaps(Wrapper<Notice> queryWrapper) {
-//        return null;
-//    }
-
-
     @Override
-    public int updateById(Notice noticeId) {
-        return noticeMapper.updateById(noticeId);
+    public boolean updateById(Notice noticeId) {
+        noticeMapper.updateById(noticeId);
+        return true;
     }
 
 
     @Override
-    public int addNotice(Notice notice) {
-        return noticeMapper.insert(notice);
+    public boolean addNotice(Notice notice) {
+        noticeMapper.insert(notice);
+        return true;
     }
 
     @Override
-    public int deleteNotice(Integer noticeId) {
-        return noticeMapper.deleteById(noticeId);
+    public boolean deleteNotice(Integer noticeId) {
+        noticeMapper.deleteById(noticeId);
+        return true;
     }
 
     @Override
-    public IPage<Notice> selectPage(IPage<Notice> page, Wrapper<Notice> queryWrapper) {
-        return noticeMapper.selectPage(page,queryWrapper);
+    public List<Notice> selectName(String informedPeople, String noticeState) {
+        QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("informed_people", informedPeople);//格式：(字段，值）
+        queryWrapper.eq("notice_state",noticeState);
+        queryWrapper.select("notice_id","notice_name","notice_person","creation_time");
+        return noticeMapper.selectList(queryWrapper);
     }
+
 
 
 

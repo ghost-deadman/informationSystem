@@ -19,15 +19,13 @@ public interface NoticeService {
     List<Notice> getAll();
     //根据id查询数据
     List<Notice> selectById(Integer notice_id);
-
-    //根据通知id修改通知内容
-    int updateById(Notice notice);
+    boolean updateById(Notice notice);
 
     //增加一个通知
-    int addNotice(Notice notice);
+    boolean addNotice(Notice notice);
 
     //删除一个通知
-    int deleteNotice(Integer notice_id);
+    boolean deleteNotice(Integer notice_id);
     //分页查询
-    IPage<Notice> selectPage(IPage<Notice> page, @Param(Constants.WRAPPER) Wrapper<Notice> queryWrapper);
+   List<Notice> selectName(String informedPeople,String noticeState);
 }

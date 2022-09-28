@@ -20,10 +20,10 @@ public class NoticeController {
     @Autowired
     private NoticeService noticeService;
 
-   //条件分页查询
+   //根据收件人姓名和状态查询
    @RequestMapping("/Notice/List")
-   public  Result selectPage(IPage<Notice> page, @Param(Constants.WRAPPER) Wrapper<Notice> queryWrapper){
-       return   Result.success(("查询成功"),noticeService.selectPage(page,queryWrapper));
+   public  Result selectName(String informedPeople,String noticeState){
+       return   Result.success(("查询成功"),noticeService.selectName(informedPeople,noticeState));
    }
 
     @RequestMapping("/Notice/Id/info")
