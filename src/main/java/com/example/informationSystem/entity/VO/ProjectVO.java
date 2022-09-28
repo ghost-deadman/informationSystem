@@ -15,16 +15,6 @@ import java.util.List;
 public class ProjectVO extends Project {
 
     /**
-     * 项目名称
-     */
-    private String name;
-
-    /**
-     * 项目概述
-     */
-    private String describes;
-
-    /**
      * 学科数组
      */
     private List<String> subjectIdList;

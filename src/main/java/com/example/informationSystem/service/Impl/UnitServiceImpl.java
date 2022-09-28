@@ -62,9 +62,9 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public IPage<Unit> selectPage(long current) {
+    public IPage<Unit> selectAll(long current, long size) {
 
-        IPage<Unit> page = new Page<>(current,5);
+        IPage<Unit> page = new Page<>(current,size);
 
         unitMapper.selectPage(page,null);
 

@@ -2,6 +2,7 @@ package com.example.informationSystem.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -39,10 +40,16 @@ public class Project {
     private String financialProgressId;
 
     /**
-     * 项目内容表id
+     * 项目名称
      */
-    @TableField(value = "project_context_id")
-    private String projectContextId;
+    @TableField(value = "project_name")
+    private String projectName;
+
+    /**
+     * 项目概述
+     */
+    @TableField(value = "project_describes")
+    private String projectDescribes;
 
     /**
      * 项目类型 0 理论 1 实体
@@ -63,9 +70,16 @@ public class Project {
     private String unitId;
 
     /**
+     * 项目立项意见id
+     */
+    @TableField(value = "approval_opinion_id")
+    private String approvalOpinionId;
+
+    /**
      * 创建时间
      */
     @TableField(value = "create_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
 
     /**

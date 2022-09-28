@@ -45,11 +45,12 @@ public interface ProjectCategoryService {
      */
     List<ProjectCategory> selectAll();
 
+
     /**
      * 分页查询
-     * @param current 页数
+     * @param page 页数
+     * @param size 每页数据条数
      * @return 分页对象
      */
-    IPage<ProjectCategory> selectPage(long current);
-
+    IPage<ProjectCategory> selectAll(long page, long size);
 }

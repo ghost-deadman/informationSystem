@@ -20,6 +20,9 @@ public class UnitServiceTest {
     @Autowired
     private UnitService unitService;
 
+    @Autowired
+    UnitMapper unitMapper;
+
     @Test
     public void test(){
 
@@ -81,7 +84,7 @@ public class UnitServiceTest {
     @Test
     public void selectPage(){
 
-        IPage<Unit> page = unitService.selectPage(1);
+        IPage<Unit> page = unitService.selectAll(1,5);
 
         System.out.println("第几页" + page.getCurrent());
 

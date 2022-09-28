@@ -48,8 +48,8 @@ public interface UnitService {
     /**
      * 分页查询
      * @param current 页数
+     * @param size 每页条数
      * @return 分页对象
      */
-    IPage<Unit> selectPage(long current);
-
+    IPage<Unit> selectAll(long current, long size);
 }

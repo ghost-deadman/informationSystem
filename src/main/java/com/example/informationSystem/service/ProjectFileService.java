@@ -1,6 +1,8 @@
 package com.example.informationSystem.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.informationSystem.entity.ProjectFile;
+import com.example.informationSystem.utils.Pager;
 
 import java.util.List;
 
@@ -52,4 +54,13 @@ public interface ProjectFileService {
      * @return 项目文件数组对象
      */
     List<ProjectFile> selectProjectFileByUnitAndStatus(String unitId, Integer status);
+
+    /**
+     * 通过单位分页查询
+     * @param unitId 单位id
+     * @param page 页数
+     * @param size 每页数据条数
+     * @return 数据
+     */
+    Pager<ProjectFile> selectProjectFileByUnit(String unitId, long page, long size);
 }

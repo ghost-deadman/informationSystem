@@ -63,13 +63,14 @@ public class ProjectCategoryServiceImpl implements ProjectCategoryService {
     }
 
     @Override
-    public IPage<ProjectCategory> selectPage(long current) {
+    public IPage<ProjectCategory> selectAll(long page, long size) {
 
-        IPage<ProjectCategory> page = new Page<>(current,5);
+        IPage<ProjectCategory> projectCategoryPage = new Page<>(page,size);
 
-        projectCategoryMapper.selectPage(page,null);
+        projectCategoryMapper.selectPage(projectCategoryPage,null);
 
-        return page;
+        return projectCategoryPage;
 
     }
+
 }

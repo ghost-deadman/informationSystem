@@ -1,6 +1,6 @@
 package com.example.informationSystem.mapper;
 
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.example.informationSystem.entity.DTO.ProjectDTO;
 import com.example.informationSystem.entity.Project;
 import com.example.informationSystem.service.ProjectService;
 import org.junit.jupiter.api.Test;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -18,36 +19,26 @@ import java.util.UUID;
 public class ProjectServiceTest {
 
     @Autowired
-    private ProjectService projectService;
+    ProjectMapper projectMapper;
+
+    @Autowired
+    ProjectService projectService;
 
     @Test
-    public void addProjectTest(){
+    public void test1(){
 
-        Project project = new Project();
-
-        project.setProjectId(UUID.randomUUID().toString());
-
-        project.setProjectUserId(UUID.randomUUID().toString());
-
-        project.setProjectContextId(UUID.randomUUID().toString());
-
-        project.setFinancialProgressId(UUID.randomUUID().toString());
-
-     //   project.setUnitUserId(UUID.randomUUID().toString());
-
-        project.setCreateDate(LocalDateTime.now());
-
-        projectService.addProject(project);
+        List<ProjectDTO> projectList =  projectMapper.selectProjectByCreateStatusAndUserPage(0,"123456", 0, 5L);
 
     }
 
     @Test
-    public void selectProjectTest(){
+    public void test2(){
 
-//       Project project = projectService.selectProject("3d57fc5d-b613-444b-bc87-5061ccd41aee");
-//
-//       System.out.println(project);
+
+
+        projectService.updateProjectCreateStatusById("e3e3ee3f-a26d-4b52-af90-d8c84c74f9a7",1);
 
     }
+
 
 }

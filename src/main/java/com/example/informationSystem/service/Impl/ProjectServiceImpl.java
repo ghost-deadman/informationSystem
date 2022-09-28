@@ -1,19 +1,18 @@
 package com.example.informationSystem.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.informationSystem.entity.Project;
-import com.example.informationSystem.entity.ProjectDraft;
-import com.example.informationSystem.entity.ProjectFile;
-import com.example.informationSystem.entity.ProjectSubject;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.example.informationSystem.entity.*;
+import com.example.informationSystem.entity.DTO.ProjectDTO;
 import com.example.informationSystem.entity.VO.ProjectVO;
-import com.example.informationSystem.mapper.ProjectFileMapper;
-import com.example.informationSystem.mapper.ProjectMapper;
-import com.example.informationSystem.mapper.ProjectSubjectMapper;
+import com.example.informationSystem.mapper.*;
 import com.example.informationSystem.service.ProjectService;
+import com.example.informationSystem.utils.Pager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,98 +32,206 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ProjectSubjectMapper projectSubjectMapper;
 
+    @Autowired
+    private SubjectMapper subjectMapper;
+
+    @Autowired
+    private ApprovalOpinionMapper approvalOpinionMapper;
+
+
     @Override
-    public boolean addProject(ProjectVO projectVO,String pathList){
+    public boolean addProject(ProjectVO projectVO, List<String> pathList) {
 
-        boolean result;
+        projectVO.setProjectId(String.valueOf(UUID.randomUUID()));
 
-        String projectId = String.valueOf(UUID.randomUUID());
+        projectVO.setCreateDate(LocalDateTime.now());
 
-        String projectDraftId = String.valueOf(UUID.randomUUID());
+        addSubjectListData(projectVO.getSubjectIdList(),projectVO.getProjectId());
 
-        /*
-         *新建项目草稿
-         */
-        ProjectDraft projectDraft = new ProjectDraft();
+        addProjectFileListData(pathList,projectVO.getProjectId());
 
-        projectDraft.setProjectId(projectId);
+        //更新草稿数据
+        projectMapper.insert(projectVO);
 
-        projectDraft.setProjectCategoryId(projectVO.getProjectCategoryId());
-
-        projectDraft.setName(projectVO.getName());
-
-        projectDraft.setDescribes(projectVO.getDescribes());
-
-        projectDraft.setType(projectVO.getType());
-
-        projectDraft.setProjectUserId(projectVO.getProjectUserId());
-
-        projectDraft.setUnitId(projectVO.getUnitId());
-
-        projectDraft.setCreateDate(LocalDateTime.now());
-
-
-        /*
-         * 新建项目
-         */
-        Project project = new Project();
-
-        project.setProjectId(projectId);
-
-        result = addProject(project);
-
-        if(result) {
-
-                /*
-                 *新建项目文件
-                 */
-
-
-                String fileName = pathList.substring(pathList.lastIndexOf("\\") + 1);
-
-                ProjectFile projectFile = getInformation(projectId, projectDraftId, fileName, pathList);
-
-                projectFileMapper.insert(projectFile);
-
-                /*
-                 *添加项目学科关联
-                 */
-                 List<String> subjectIdList = projectVO.getSubjectIdList();
-
-                 for(String subjectId : subjectIdList) {
-
-                     ProjectSubject projectSubject = new ProjectSubject();
-
-                     projectSubject.setProjectSubjectId(String.valueOf(UUID.randomUUID()));
-
-                     projectSubject.setProjectId(projectId);
-
-                     projectSubject.setProjectDraftId(projectDraftId);
-
-                     projectSubject.setProjectSubjectId(subjectId);
-
-                     projectSubjectMapper.insert(projectSubject);
-                 }
-
-                return true;
-
-        }
-
-        return false;
+        return true;
 
     }
 
-    @Override
-    public boolean addProject(Project project) {
+    public void  addSubjectListData(List<String> subjectList,String projectId){
 
-        projectMapper.insert(project);
+        //文件放入
+        for (String subjectId : subjectList) {
+
+            ProjectSubject projectSubject = new ProjectSubject();
+
+            projectSubject.setProjectId(projectId);
+
+            projectSubject.setSubjectId(subjectId);
+
+            projectSubjectMapper.insert(projectSubject);
+
+        }
+
+    }
+
+    public void  addProjectFileListData(List<String> pathList,String projectId){
+
+        //文件放入
+        for (String path : pathList) {
+
+            String fileName = path.substring(path.lastIndexOf("\\") + 1);
+
+            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectId, fileName, path);
+
+            projectFileMapper.insert(projectFile);
+
+        }
+
+    }
+
+
+    @Override
+    public boolean deleteProjectById(List<String> projectIdList) {
+
+        projectMapper.deleteBatchIds(projectIdList);
+
+        return true;
+
+    }
+
+
+    @Override
+    public Pager<ProjectDTO> selectProjectDtoByUserId(int createStatus, String userId, long page, long size) {
+
+        Pager<ProjectDTO> projectDtoPager = new Pager<>(page, size);
+
+        List<ProjectDTO> projectDtoList = projectMapper.selectProjectByCreateStatusAndUserPage(createStatus, userId, projectDtoPager.getOffset(), size);
+
+        projectDtoList = projectDtoSetSubjectData(projectDtoList);
+
+        projectDtoPager.setDataList(projectDtoList);
+
+        return projectDtoPager;
+    }
+
+    @Override
+    public boolean updateProject(ProjectVO projectVO, List<String> pathList) {
+
+        //有文件要更新文件
+        QueryWrapper<ProjectFile> projectFileQueryWrapper = new QueryWrapper<>();
+
+        projectFileQueryWrapper.eq("project_id", projectVO.getProjectId());
+
+        //删除文件 重新添加
+        projectFileMapper.delete(projectFileQueryWrapper);
+
+        QueryWrapper<ProjectSubject> projectSubjectQueryWrapper = new QueryWrapper<>();
+
+        projectSubjectQueryWrapper.eq("project_id", projectVO.getProjectId());
+
+        projectSubjectMapper.delete(projectSubjectQueryWrapper);
+
+        addSubjectListData(projectVO.getSubjectIdList(),projectVO.getProjectId());
+
+        addProjectFileListData(pathList,projectVO.getProjectId());
+
+        //更新草稿数据
+        projectMapper.updateById(projectVO);
 
         return true;
 
     }
 
     @Override
-    public boolean updateProject(Project project) {
+    public boolean updateProject(ProjectVO projectVO) {
+
+        projectMapper.updateById(projectVO);
+
+        return true;
+
+    }
+
+    @Override
+    public boolean updateProjectCreateStatusById(String projectId, int createStatus) {
+
+        UpdateWrapper<Project> projectUpdateWrapper = new UpdateWrapper<>();
+
+        projectUpdateWrapper.eq("project_id",projectId);
+
+        projectUpdateWrapper.set("create_status",createStatus);
+
+        projectMapper.update(null,projectUpdateWrapper);
+
+        return true;
+
+    }
+
+    public List<ProjectDTO> projectDtoSetSubjectData(List<ProjectDTO> projectDtoList){
+
+        List<Subject> subjectList = new ArrayList<>();
+
+        for(ProjectDTO projectDTO : projectDtoList){
+
+            QueryWrapper<ProjectSubject> projectSubjectQueryWrapper = new QueryWrapper<>();
+
+            projectSubjectQueryWrapper.eq("project_id",projectDTO.getProjectId());
+
+            List<ProjectSubject> subjectIdList = projectSubjectMapper.selectList(projectSubjectQueryWrapper);
+
+            for (ProjectSubject subjectId : subjectIdList) {
+
+                QueryWrapper<Subject> subjectQueryWrapper = new QueryWrapper<>();
+
+                subjectQueryWrapper.eq("subject_id", subjectId.getSubjectId());
+
+                subjectList.add(subjectMapper.selectOne(subjectQueryWrapper));
+
+            }
+
+            projectDTO.setSubjectList(subjectList);
+
+        }
+
+        return projectDtoList;
+
+    }
+
+    @Override
+    public Pager<ProjectDTO> selectProjectDtoByUnitAndCreateStatus(int createStatus, String unitId, long currentPage, long pageSize) {
+
+        Pager<ProjectDTO> projectDtoPager = new Pager<>(createStatus, pageSize);
+
+        List<ProjectDTO> projectDtoList = projectMapper.selectProjectByCreateStatusAndUnitPage(createStatus, unitId, projectDtoPager.getOffset(), pageSize);
+
+        projectDtoList = projectDtoSetSubjectData(projectDtoList);
+
+        projectDtoPager.setDataList(projectDtoList);
+
+        return projectDtoPager;
+
+
+    }
+
+    @Override
+    public boolean setApprovalOpinion(String projectId,String userId, String approvalOpinionContext) {
+
+        ApprovalOpinion approvalOpinion = new ApprovalOpinion();
+
+        approvalOpinion.setApprovalOpinionId(String.valueOf(UUID.randomUUID()));
+
+        approvalOpinion.setContext(approvalOpinionContext);
+
+        approvalOpinion.setProjectId(projectId);
+
+        approvalOpinion.setDate(LocalDateTime.now());
+
+        approvalOpinion.setUserId(userId);
+
+        Project project = projectMapper.selectById(projectId);
+
+        project.setApprovalOpinionId(approvalOpinion.getApprovalOpinionId());
+
+        approvalOpinionMapper.insert(approvalOpinion);
 
         projectMapper.updateById(project);
 
@@ -133,58 +240,25 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean deleteProjectById(String id) {
+    public Pager<ProjectDTO> selectProjectDtoByCreateStatusPage(int createStatus, long currentPage, long pageSize) {
 
-        projectMapper.deleteById(id);
+        Pager<ProjectDTO> projectDtoPager = new Pager<>(currentPage,pageSize);
 
-        return true;
+        List<ProjectDTO> projectDtoList =  projectMapper.selectProjectByCreateStatusPage(createStatus,projectDtoPager.getOffset(),pageSize);
 
-    }
+        for (ProjectDTO projectDTO : projectDtoList){
 
-    @Override
-    public Project selectProjectById(String id) {
+            ApprovalOpinion approvalOpinion = approvalOpinionMapper.selectById(projectDTO.getApprovalOpinionId());
 
-        return projectMapper.selectById(id);
+            projectDTO.setApprovalOpinion(approvalOpinion);
 
-    }
+        }
 
+        projectDtoSetSubjectData(projectDtoList);
 
+        projectDtoPager.setDataList(projectDtoList);
 
-    @Override
-    public List<Project> selectProjectByUserId(String userId) {
-
-        QueryWrapper<Project> projectQueryWrapper = new QueryWrapper<>();
-
-        projectQueryWrapper.eq("project_user_id",userId);
-
-        return projectMapper.selectList(projectQueryWrapper);
-
-    }
-
-    /**
-     * 获取文件相关信息存储项目文件对象中
-     * @param fileName 文件名称
-     * @return 项目文件对象
-     */
-    public ProjectFile getInformation(String projectId,String projectDraftId,String fileName, String path){
-
-        ProjectFile projectFile = new ProjectFile();
-
-        projectFile.setProjectId(projectId);
-
-        projectFile.setProjectDraftId(projectDraftId);
-
-        projectFile.setType(0);
-
-        projectFile.setProjectFileId(UUID.randomUUID().toString());
-
-        projectFile.setDate(LocalDateTime.now());
-
-        projectFile.setName(fileName);
-
-        projectFile.setPath(path);
-
-        return projectFile;
+        return projectDtoPager;
 
     }
 

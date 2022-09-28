@@ -45,14 +45,14 @@ public class ProjectDraft {
     /**
      * 描述
      */
-    @TableField(value = "describes")
-    private String describes;
+    @TableField(value = "project_describes")
+    private String projectDescribes;
 
     /**
      * 名称
      */
-    @TableField(value = "name")
-    private String name;
+    @TableField(value = "project_name")
+    private String projectName;
 
     /**
      * 类型
@@ -72,12 +72,6 @@ public class ProjectDraft {
     @TableField(value = "create_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
-
-    /**
-     * 状态
-     */
-    @TableField(value = "status")
-    private Integer status;
 
     /**
      * 是否删除

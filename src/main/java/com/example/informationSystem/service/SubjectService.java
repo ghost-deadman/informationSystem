@@ -1,5 +1,6 @@
 package com.example.informationSystem.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.informationSystem.entity.Subject;
 
 import java.util.List;
@@ -44,4 +45,11 @@ import java.util.List;
      */
     List<Subject> selectAll();
 
- }
+    /**
+     * 分页查询
+     * @param page 页数
+     * @param size 每页数据条数
+     * @return 页内数据
+     */
+   IPage<Subject> selectAll(long page, long size);
+}
