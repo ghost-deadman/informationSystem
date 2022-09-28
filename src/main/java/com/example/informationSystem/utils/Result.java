@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author by cdh
- * @description:公共返回对象
+ * @description: 公共返回对象
  * @Date: Created in 17:52 on 2021/4/18
  */
 @Data
@@ -26,6 +26,10 @@ public class Result {
         return new Result(200,message,null);
     }
 
+    public static Result success(Object obj){
+        return new Result(200, null,obj);
+    }
+
     public static Result success(String message,Object obj){
         return new Result(200,message,obj);
     }
@@ -37,5 +41,7 @@ public class Result {
     public static Result error(String message,Object obj){
         return new Result(500,message,obj);
     }
+
+    public static Result error(int code, String message) {return new Result(code, message, null); }
 
 }

@@ -3,6 +3,7 @@ package com.example.informationSystem.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +11,13 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author ：zqy
- * @date ：Created in 2022/9/14 17:23
+ * @Date: ：Created in 2022/9/14 17:23
+ * @description: 专家实体
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("specialist")
 public class Specialist {
     /**
      * 主键

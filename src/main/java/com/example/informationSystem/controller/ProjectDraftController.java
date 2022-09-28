@@ -1,8 +1,8 @@
 package com.example.informationSystem.controller;
 
 import com.example.informationSystem.entity.ProjectDraft;
-import com.example.informationSystem.entity.vo.ResponseResult;
 import com.example.informationSystem.service.ProjectDraftService;
+import com.example.informationSystem.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,38 +18,33 @@ public class ProjectDraftController {
     ProjectDraftService projectDraftService;
 
     @PostMapping("/save")
-    public ResponseResult save(ProjectDraft projectDraft){
+    public Result save(ProjectDraft projectDraft){
         projectDraftService.addProjectDraft(projectDraft);
-        ResponseResult responseResult = new ResponseResult(200,"success",null);
-        return responseResult;
+        return Result.success("success");
     }
 
     @GetMapping("/delete")
-    public ResponseResult delete(String projectDraftId){
+    public Result delete(String projectDraftId){
         projectDraftService.deleteProjectDraft(projectDraftId);
-        ResponseResult responseResult = new ResponseResult(200,"success",null);
-        return responseResult;
+        return Result.success("success");
     }
 
     @PostMapping("/update")
-    public ResponseResult update(ProjectDraft projectDraft){
+    public Result update(ProjectDraft projectDraft){
         projectDraftService.updateProjectDraft(projectDraft);
-        ResponseResult responseResult = new ResponseResult(200,"success",null);
-        return responseResult;
+        return Result.success("success");
     }
 
     @GetMapping("/selectById")
-    public ResponseResult selectById(String id){
+    public Result selectById(String id){
         ProjectDraft projectDraft = projectDraftService.selectProjectDraftById(id);
-        ResponseResult responseResult = new ResponseResult(200,"success",projectDraft);
-        return responseResult;
+        return Result.success("success",projectDraft);
     }
 
     @GetMapping("/select")
-    public ResponseResult select(){
+    public Result select(){
         List<ProjectDraft> projectDraftList = projectDraftService.selectProjectDraft();
-        ResponseResult responseResult = new ResponseResult(200,"success",projectDraftList);
-        return responseResult;
+        return Result.success("success",projectDraftList);
     }
 
 }

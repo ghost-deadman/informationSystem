@@ -12,7 +12,7 @@ import java.util.Date;
 
 /**
  * @author ：zqy
- * @date ：Created in 2022/9/16 14:28
+ * @Date: ：Created in 2022/9/16 14:28
  */
 @Data
 @AllArgsConstructor

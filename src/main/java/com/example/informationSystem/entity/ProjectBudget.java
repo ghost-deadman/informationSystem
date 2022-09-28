@@ -6,8 +6,9 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @author ：zqy
- * @date ：Created in 2022/9/23 14:28
+ * @author :zqy
+ * @Date: Created in 2022/9/23 14:28
+ * @description: 项目预算
  */
 @Data
 @TableName(value = "project_budget")

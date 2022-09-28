@@ -7,7 +7,8 @@ import java.time.LocalDateTime;
 
 /**
  * @author ：ghost
- * @date ：Created in 2022/9/15 9:22
+ * @Date:  Created in 2022/9/15 9:22
+ * @description: 项目实体
  */
 @Data
 @TableName(value = "project")

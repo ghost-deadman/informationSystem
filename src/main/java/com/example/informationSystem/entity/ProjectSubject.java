@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * @author ：zqy
- * @date ：Created in 2022/9/19 14:28
+ * @Date: ：Created in 2022/9/19 14:28
+ * @description: 项目学科
  */
 @Data
 @NoArgsConstructor

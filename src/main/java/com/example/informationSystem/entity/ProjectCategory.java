@@ -1,20 +1,19 @@
 package com.example.informationSystem.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * @author ：zqy
- * @date ：Created in 2022/9/19 14:28
+ * @Date: Created in 2022/9/19 14:28
+ * @description: 项目类型
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@TableName("project_category")
 public class ProjectCategory {
     /**
      * 主键

@@ -1,8 +1,8 @@
 package com.example.informationSystem.controller;
 
 import com.example.informationSystem.entity.ArrangePlan;
-import com.example.informationSystem.entity.vo.ResponseResult;
 import com.example.informationSystem.service.ArrangePlanService;
+import com.example.informationSystem.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,14 +18,14 @@ public class ArrangePlanController {
     private ArrangePlanService arrangePlanService;
 
     @PostMapping("/save")
-    public ResponseResult save(  @RequestBody List<ArrangePlan> arrangePlanList){
+    public Result save(  @RequestBody List<ArrangePlan> arrangePlanList){
         if(arrangePlanList != null) {
             for (ArrangePlan arrangePlan : arrangePlanList) {
                 System.out.println(arrangePlan);
             }
         }
 
-       return new ResponseResult(200,"666");
+       return Result.success( "666");
 
     }
 
