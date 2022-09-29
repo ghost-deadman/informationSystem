@@ -15,9 +15,9 @@ public class Auditopinion {
 
   @TableId(type = IdType.ASSIGN_ID)
   @TableField(value = "audit_id")
-  private long auditId;
+  private String auditId;
   @TableField(value = "project_name")
-  private long projectName;
+  private String projectName;
   @TableField(value = "mid_opinion")
   private String midOpinion;
   @TableField(value = "year_opinion")
@@ -26,6 +26,8 @@ public class Auditopinion {
   private String acceptanceOpinion;
   @TableField(value = "audit_people")
   private String auditPeople;
+  @TableField(value = "project_id")
+  private String projectId;
   @TableLogic(value = "0",delval = "1")
   @TableField(value = "deleted")
   private int deleted;

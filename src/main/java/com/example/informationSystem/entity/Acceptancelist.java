@@ -15,7 +15,7 @@ public class Acceptancelist {
 
   @TableId(type = IdType.ASSIGN_ID)
   @TableField(value = "accept_id")
-  private long acceptId;
+  private String acceptId;
   @TableField(value = "project_name")
   private String projectName;
   @TableField(value = "project_execution")

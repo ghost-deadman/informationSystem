@@ -20,8 +20,8 @@ public class InspectionreportServiceImpl implements InspectionreportService {
     }
 
     @Override
-    public Inspectionreport selectById(Integer protectId) {
-        return inspectionreportMapper.selectById(protectId);
+    public Inspectionreport selectById(Integer inspectionId) {
+        return inspectionreportMapper.selectById(inspectionId);
     }
 
     @Override

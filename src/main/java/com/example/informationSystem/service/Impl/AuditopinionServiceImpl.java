@@ -20,14 +20,14 @@ public class AuditopinionServiceImpl implements AuditopinionService {
     }
 
     @Override
-    public Auditopinion selectById(Integer protectId) {
-        return auditopinionMapper.selectById(protectId);
+    public Auditopinion selectById(Integer auditId) {
+        return auditopinionMapper.selectById(auditId);
     }
 
     @Override
-    public Auditopinion selectProject(String projectName) {
+    public Auditopinion selectProject(String projectId) {
         QueryWrapper<Auditopinion> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("project_name",projectName);
+        queryWrapper.eq("project_id",projectId);
         return auditopinionMapper.selectOne(queryWrapper);
     }
 

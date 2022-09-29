@@ -17,7 +17,7 @@ public class Material {
   @TableField(value = "material_id")
   private long materialId;
   @TableField(value = "project_name")
-  private long projectName;
+  private String projectName;
   @TableField(value = "material_content")
   private String materialContent;
   @TableLogic(value = "0",delval = "1")

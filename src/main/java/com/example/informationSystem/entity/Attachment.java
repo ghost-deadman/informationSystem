@@ -15,13 +15,14 @@ public class Attachment {
 
   @TableId(type = IdType.ASSIGN_ID)
   @TableField(value = "attachment_id")
-  private long attachmentId;
+  private String attachmentId;
   @TableField(value = "attachment_content")
   private String attachmentContent;
   @TableField(value = "attachment_name")
   private String attachmentName;
   @TableField(value = "notice_id")
   private long noticeId;
+
 
 
 }

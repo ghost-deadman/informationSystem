@@ -9,8 +9,8 @@ public interface AuditopinionService {
     List<Auditopinion> getAll();
     //根据意见id查询审批意见
     Auditopinion selectById(Integer auditId);
-    //根据项目名称查询审批意见
-    Auditopinion selectProject(String projectName);
+    //根据项目id查询审批意见
+    Auditopinion selectProject(String projectId);
     //根据审批人姓名查询审批意见
     List<Auditopinion> selectAuditPeople(String auditPeople);
     //增加审批意见

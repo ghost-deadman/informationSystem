@@ -18,14 +18,14 @@ public interface NoticeService {
     //查询所有通知数据
     List<Notice> getAll();
     //根据id查询数据
-    List<Notice> selectById(Integer notice_id);
+    Notice selectById(Integer noticeId);
     boolean updateById(Notice notice);
 
     //增加一个通知
     boolean addNotice(Notice notice);
 
     //删除一个通知
-    boolean deleteNotice(Integer notice_id);
+    boolean deleteNotice(Integer noticeId);
     //分页查询
-   List<Notice> selectName(String informedPeople,String noticeState);
+   List<Notice> selectName(String informedPeople,int noticeState);
 }

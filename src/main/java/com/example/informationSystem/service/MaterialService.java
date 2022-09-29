@@ -9,7 +9,7 @@ public interface MaterialService {
     //查询所有验收材料
     List<Material> getAll();
     //根据项目id查询验收材料
-    Material selectById(Integer protectId);
+    Material selectById(Integer materialId);
     //增加验收材料
     Boolean addMaterial(Material material);
     //修改验收材料

@@ -16,8 +16,8 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public Material selectById(Integer protectId) {
-        return materialMapper.selectById(protectId);
+    public Material selectById(Integer materialId) {
+        return materialMapper.selectById(materialId);
     }
 
     @Override

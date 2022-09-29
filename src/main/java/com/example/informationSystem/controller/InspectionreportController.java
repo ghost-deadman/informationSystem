@@ -14,8 +14,8 @@ public class InspectionreportController {
         return Result.success("查询成功",inspectionreportService.getAll());
     }
     @RequestMapping("/Acceptance/Inspectionreport/Id/Info")
-    public Result selectById(Integer protectId){
-        return Result.success("查询成功",inspectionreportService.selectById(protectId));
+    public Result selectById(Integer inspectionId){
+        return Result.success("查询成功",inspectionreportService.selectById(inspectionId));
     }
     @RequestMapping("/Acceptance/Inspectionreport/Insert")
     public Result addInspectionreport(Inspectionreport inspectionreport){

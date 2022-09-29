@@ -15,8 +15,8 @@ public class MaterialController {
         return Result.success("查询成功",materialService.getAll());
     }
     @RequestMapping("/Acceptance/Material/Id/List")
-    public Result selectById(Integer protectId){
-        return Result.success("查询成功",materialService.selectById(protectId));
+    public Result selectById(Integer materialId){
+        return Result.success("查询成功",materialService.selectById(materialId));
     }
     @RequestMapping("/Acceptance/Material/Insert")
     public Result addMaterial(Material material){

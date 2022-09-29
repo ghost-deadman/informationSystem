@@ -16,12 +16,12 @@ public class AuditopinionController {
         return Result.success("查询成功",auditopinionService.getAll());
     }
     @RequestMapping("/Acceptance/Auditopinion/Id/Info")
-    public Result selectById(Integer protectId){
-        return Result.success("查询成功",auditopinionService.selectById(protectId));
+    public Result selectById(Integer auditId){
+        return Result.success("查询成功",auditopinionService.selectById(auditId));
     }
-    @RequestMapping("/Acceptance/Auditopinion/projectName/Info")
-    public Result selectProject(String projectName){
-        return Result.success(("查询成功"),auditopinionService.selectProject(projectName));
+    @RequestMapping("/Acceptance/Auditopinion/projectId/Info")
+    public Result selectProject(String projectId){
+        return Result.success(("查询成功"),auditopinionService.selectProject(projectId));
     }
 
     @RequestMapping("/Acceptance/Auditopinion/auditPeople/Info")

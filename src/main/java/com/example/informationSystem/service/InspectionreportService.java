@@ -8,8 +8,8 @@ import java.util.List;
 public interface InspectionreportService {
     //查询所有检查报告
     List<Inspectionreport> getAll();
-    //根据项目id查询检查报告
-    Inspectionreport selectById(Integer protectId);
+    //根据检查报告id查询检查报告
+    Inspectionreport selectById(Integer inspectionId);
     //增加检测报告
     Boolean addInspectionreport(Inspectionreport inspectionreport);
     //修改检测报告

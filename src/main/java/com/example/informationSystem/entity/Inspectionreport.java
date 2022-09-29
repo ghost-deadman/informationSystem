@@ -15,15 +15,17 @@ public class Inspectionreport {
 
   @TableId(type = IdType.ASSIGN_ID)
   @TableField(value = "inspection_id")
-  private long inspectionId;
+  private String inspectionId;
   @TableField(value = "project_name")
-  private long projectName;
+  private String projectName;
   @TableField(value = "mid_inspection")
   private String midInspection;
   @TableField(value = "year_inspection")
   private String yearInspection;
   @TableField(value = "concluding_inspection")
   private String concludingInspection;
+  @TableField(value = "project_id")
+  private String projectId;
   @TableLogic(value = "0",delval = "1")
   @TableField(value = "deleted")
   private int deleted;

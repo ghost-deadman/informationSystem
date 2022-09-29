@@ -27,8 +27,9 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<Notice> selectById(Integer noticeId) {
-        return (List<Notice>) noticeMapper.selectById(noticeId);
+    public Notice selectById(Integer noticeId) {
+
+        return noticeMapper.selectById(noticeId);
     }
 
 
@@ -53,7 +54,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public List<Notice> selectName(String informedPeople, String noticeState) {
+    public List<Notice> selectName(String informedPeople, int noticeState) {
         QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("informed_people", informedPeople);//格式：(字段，值）
         queryWrapper.eq("notice_state",noticeState);
