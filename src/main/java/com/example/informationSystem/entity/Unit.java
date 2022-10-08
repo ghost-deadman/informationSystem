@@ -15,8 +15,7 @@ public class Unit {
     /**
      * 单位id
      */
-    @TableId( type = IdType.ASSIGN_UUID)
-    @TableField( value = "unit_id")
+    @TableId(value = "unit_id", type = IdType.ASSIGN_UUID)
     private String unitId;
 
     /**

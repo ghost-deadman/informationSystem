@@ -1,21 +1,23 @@
 package com.example.informationSystem.controller;
 
-import com.example.informationSystem.entity.ApprovalOpinion;
 import com.example.informationSystem.entity.DTO.ProjectDTO;
+import com.example.informationSystem.entity.Notice;
 import com.example.informationSystem.entity.VO.ProjectVO;
+import com.example.informationSystem.service.NoticeService;
 import com.example.informationSystem.service.ProjectService;
 import com.example.informationSystem.utils.FileUtils;
 import com.example.informationSystem.utils.Pager;
 import com.example.informationSystem.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author ：ghost
@@ -23,6 +25,10 @@ import java.util.List;
  */
 @RestController
 public class ProjectController {
+
+    private final static String NOTICE_NAME = "审批失败通知";
+
+    private final static String NOTICE_CONTENT = "感谢你的投递,欢迎下次光临。";
 
     private final static int PROJECT_SUBMIT = 1;
 
@@ -40,6 +46,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private NoticeService noticeService;
 
     @Autowired
     private FileUtils fileUpload;
@@ -128,12 +137,36 @@ public class ProjectController {
     }
 
     @RequestMapping("/Build/Project/User/CreateStatus/Page/List")
-    public Result selectProjectByUserId(int createStatus,long currentPage, long pageSize){
+    public Result selectProjectByUserIdAndCreateStatus(int createStatus,long currentPage, long pageSize){
 
         //token拿userId
         String userId = "123456";
 
-        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserId(createStatus,userId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserIdAndCreateStatus(createStatus,userId,currentPage,pageSize);
+
+        return Result.success("查询成功",projectDtoPage);
+
+    }
+
+    @RequestMapping("/Build/Project/User/ExecuteStatus/Page/List")
+    public Result selectProjectByUserIdAndExecuteStatus(int executeStatus,long currentPage, long pageSize){
+
+        //token拿userId
+        String userId = "123456";
+
+        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserIdAndExecuteStatus(executeStatus,userId,currentPage,pageSize);
+
+        return Result.success("查询成功",projectDtoPage);
+
+    }
+
+    @RequestMapping("/Build/Project/User/Page/List")
+    public Result selectProjectByUserId(long currentPage, long pageSize){
+
+        //token拿userId
+        String userId = "123456";
+
+        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserId(userId,currentPage,pageSize);
 
         return Result.success("查询成功",projectDtoPage);
 
@@ -151,7 +184,7 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/Unit/PrincipalCreateStatus/Page/List")
+    @RequestMapping({"/Build/Project/Unit/PrincipalCreateStatus/Page/List","/Build/Project/Unit/AdminCreateStatusSuccess/Page/List"})
     public Result selectProjectByUnitAndPrincipalCreateStatus(long currentPage,long pageSize){
 
         //token 那unitId
@@ -163,10 +196,64 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Centralized/Project/AdminCreateStatus/Page/List")
+    @RequestMapping("/Build/Project/Unit/AdminCreateStatusFailure/Page/List")
+    public Result selectProjectByUnitAndAdminCreateStatusFailure(long currentPage,long pageSize){
+
+        //token 那unitId
+        String unitId = "1";
+
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(ADMIN_SUBMIT_FAILURE,unitId,currentPage,pageSize);
+
+        return Result.success("查询成功",projectDtoPager);
+
+    }
+
+    @RequestMapping("/Build/Project/Unit/PrincipalCreateStatusSuccess/Page/List")
+    public Result selectProjectByUnitAndPrincipalCreateStatusSuccess(long currentPage,long pageSize){
+
+        //token 那unitId
+        String unitId = "1";
+
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PRINCIPAL_SUBMIT_SUCCESS,unitId,currentPage,pageSize);
+
+        return Result.success("查询成功",projectDtoPager);
+
+    }
+
+    @RequestMapping("/Build/Project/Unit/PrincipalCreateStatusFailure/Page/List")
+    public Result selectProjectByUnitAndPrincipalCreateStatusFailure(long currentPage,long pageSize){
+
+        //token 那unitId
+        String unitId = "1";
+
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PRINCIPAL_SUBMIT_FAILURE,unitId,currentPage,pageSize);
+
+        return Result.success("查询成功",projectDtoPager);
+
+    }
+
+    @RequestMapping({"/Centralized/Project/AdminCreateStatus/Page/List",})
     public Result selectProjectCentralizedAdminCreateStatus(long currentPage,long pageSize){
 
         Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(PRINCIPAL_SUBMIT_SUCCESS,currentPage,pageSize);
+
+        return Result.success("查询成功",projectDtoPager);
+
+    }
+
+    @RequestMapping({"/Centralized/Project/AdminCreateStatusSuccess/Page/List",})
+    public Result selectProjectCentralizedAdminCreateStatusSuccess(long currentPage,long pageSize){
+
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(CENTRALIZED_SUBMIT_SUCCESS,currentPage,pageSize);
+
+        return Result.success("查询成功",projectDtoPager);
+
+    }
+
+    @RequestMapping({"/Centralized/Project/AdminCreateStatusFailure/Page/List",})
+    public Result selectProjectCentralizedAdminCreateStatusFailure(long currentPage,long pageSize){
+
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(CENTRALIZED_SUBMIT_FAILURE,currentPage,pageSize);
 
         return Result.success("查询成功",projectDtoPager);
 
@@ -209,7 +296,17 @@ public class ProjectController {
 
         if(projectService.updateProjectCreateStatusById(projectId,ADMIN_SUBMIT_FAILURE)){
 
-            return Result.success("项目审批失败");
+            String noticeName = "建设部门";
+
+            String noticeContent = "你的项目在建设部门审批失败,请检查项目申请信息或材料,";
+
+            if(addSystemNotice(noticeName + NOTICE_NAME,noticeContent + NOTICE_CONTENT,projectId)){
+
+                return Result.success("项目审批失败,已发送邮件");
+
+            }
+
+            return Result.error("项目审批失败,发送失败");
 
         }else{
 
@@ -250,7 +347,17 @@ public class ProjectController {
 
         if(projectService.updateProjectCreateStatusById(projectId,PRINCIPAL_SUBMIT_FAILURE)){
 
-            return Result.success("项目审批失败");
+            String noticeName = "建设部门";
+
+            String noticeContent = "你的项目在建设部门单位管理员审批失败,请修改完善申报任务书,";
+
+            if(addSystemNotice(noticeName + NOTICE_NAME,noticeContent + NOTICE_CONTENT,projectId)){
+
+                return Result.success("项目审批失败,已发送邮件");
+
+            }
+
+            return Result.error("项目审批失败,发送失败");
 
         }else{
 
@@ -275,12 +382,46 @@ public class ProjectController {
 
     }
 
+    /**
+     * 审批失败系统发送邮件
+     * @return 是否成功
+     */
+    private boolean addSystemNotice(String name,String content,String projectId){
+
+        Notice notice = new Notice();
+
+        notice.setNoticeId(String.valueOf(UUID.randomUUID()));
+
+        notice.setNoticeName(name);
+
+        notice.setNoticeContent(content);
+
+        notice.setNoticePerson("系统");
+
+        notice.setInformedPeople(projectService.getProjectUserIdByProjectId(projectId));
+
+        notice.setCreationTime(LocalDateTime.now());
+
+        return noticeService.addNotice(notice);
+
+    }
+
     @RequestMapping("/Centralized/Project/Id/AdminApproveFailure/Update")
     public Result centralizedAdminApproveFailureById(String projectId){
 
         if(projectService.updateProjectCreateStatusById(projectId,CENTRALIZED_SUBMIT_FAILURE)){
 
-            return Result.success("项目审批失败");
+            String noticeName = "归口部门";
+
+            String noticeContent = "你的项目在归口部门审批失败,请减低预算相关实际需求,";
+
+            if(addSystemNotice(noticeName + NOTICE_NAME,noticeContent + NOTICE_CONTENT,projectId)){
+
+                return Result.success("项目审批失败,已发送邮件");
+
+            }
+
+            return Result.error("项目审批失败,发送失败");
 
         }else{
 

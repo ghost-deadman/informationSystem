@@ -13,6 +13,7 @@ import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 
 /**
@@ -26,8 +27,7 @@ public class Notice {
   /**
    * 主键
    */
-  @TableId(type = IdType.ASSIGN_UUID)
-  @TableField(value = "notice_id")
+  @TableId(value = "notice_id",type = IdType.ASSIGN_UUID)
   private String noticeId;
 
   /**
@@ -64,7 +64,7 @@ public class Notice {
    * 通知创建时间
    */
   @TableField(value = "creation_time")
-  private Timestamp creationTime;
+  private LocalDateTime creationTime;
 
   /**
    * 状态 0 默认未查看  1 已查看

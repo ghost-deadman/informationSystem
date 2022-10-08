@@ -18,8 +18,7 @@ public class ApprovalOpinion {
     /**
      * 主键
      */
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "approval_opinion_id")
+    @TableId(value = "approval_opinion_id", type = IdType.ASSIGN_UUID)
     private String approvalOpinionId;
 
     /**

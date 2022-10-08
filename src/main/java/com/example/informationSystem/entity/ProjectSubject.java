@@ -18,8 +18,7 @@ public class ProjectSubject {
     /**
      * 主键
      */
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "project_subject_id")
+    @TableId(value = "project_subject_id",type = IdType.ASSIGN_UUID)
     private String projectSubjectId;
 
     /**

@@ -16,8 +16,7 @@ public class ProjectContext {
     /**
      * 主键
      */
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "project_context_id")
+    @TableId(value = "project_context_id",type = IdType.ASSIGN_UUID)
     private String projectContextId;
 
     /**

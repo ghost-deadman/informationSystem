@@ -13,8 +13,7 @@ import lombok.NoArgsConstructor;
 @TableName(value = "project_category")
 public class ProjectCategory {
 
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "project_category_id")
+    @TableId(value = "project_category_id",type = IdType.ASSIGN_UUID)
     private String projectCategoryId;
 
     @TableField(value = "name")

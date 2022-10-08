@@ -16,8 +16,7 @@ public class Subject {
     /**
      * 单位id
      */
-    @TableId( type = IdType.ASSIGN_UUID)
-    @TableField( value = "subject_id")
+    @TableId(value = "subject_id", type = IdType.ASSIGN_UUID)
     private String subjectId;
 
     /**

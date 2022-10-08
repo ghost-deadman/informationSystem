@@ -15,8 +15,7 @@ public class Specialist {
     /**
      * 专家id
      */
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "specialist_id")
+    @TableId(value = "specialist_id",type = IdType.ASSIGN_UUID)
     private String specialistId;
 
     /**

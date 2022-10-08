@@ -1,6 +1,7 @@
 package com.example.informationSystem.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.informationSystem.entity.Notice;
@@ -64,7 +65,38 @@ public class NoticeServiceImpl implements NoticeService {
 
     }
 
+    @Override
+    public int getNoticeByStatusAndUserCount(String userId, int status) {
 
+        QueryWrapper<Notice> noticeQueryWrapper = new QueryWrapper<>();
+
+        noticeQueryWrapper.eq("notice_state",status);
+
+        noticeQueryWrapper.eq("informed_people",userId);
+
+        return noticeMapper.selectCount(noticeQueryWrapper);
+
+    }
+
+    @Override
+    public boolean deleteNoticeBatch(List<String> noticeIdList) {
+
+        return noticeMapper.deleteBatchIds(noticeIdList) > 0;
+
+    }
+
+    @Override
+    public boolean updateNoticeStatusById(String noticeId) {
+
+        UpdateWrapper<Notice> noticeUpdateWrapper = new UpdateWrapper<>();
+
+        noticeUpdateWrapper.set("notice_state",1);
+
+        noticeUpdateWrapper.eq("notice_id",noticeId);
+
+        return noticeMapper.update(null,noticeUpdateWrapper) > 0;
+
+    }
 
 
 }

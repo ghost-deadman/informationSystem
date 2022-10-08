@@ -20,8 +20,7 @@ public class ProjectDraft {
     /**
      * 主键
      */
-    @TableId( type = IdType.ASSIGN_UUID)
-    @TableField(value = "project_draft_id")
+    @TableId(value = "project_draft_id", type = IdType.ASSIGN_UUID)
     private String projectDraftId;
 
     /**

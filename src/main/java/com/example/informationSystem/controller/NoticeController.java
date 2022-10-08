@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 /**
  * @author pcdn
@@ -22,7 +24,7 @@ public class NoticeController {
     @Autowired
     private NoticeService noticeService;
 
-    @RequestMapping("/Notice/User/Unread/List")
+    @RequestMapping("/Notice/UnRead/List")
     public Result selectUnread(long currentPage ,long pageSize) {
 
         //token 拿用户id
@@ -34,7 +36,7 @@ public class NoticeController {
 
     }
 
-    @RequestMapping("/Notice/User/Read/List")
+    @RequestMapping("/Notice/Read/List")
     public Result selectRead(long currentPage ,long pageSize) {
 
         //token 拿用户id
@@ -49,9 +51,10 @@ public class NoticeController {
         return Result.success("查询成功", noticeService.selectById(noticeId));
     }
 
-    @RequestMapping("/Notice/Update")
-    public Result updateById(Notice notice) {
-        if (noticeService.updateById(notice)) {
+    @RequestMapping("/Notice/Id/Update")
+    public Result updateNoticeStatusById(String noticeId) {
+
+        if (noticeService.updateNoticeStatusById(noticeId)) {
 
             return Result.success("修改成功");
 
@@ -91,4 +94,32 @@ public class NoticeController {
         }
 
     }
+
+    @GetMapping("/Notice/UnRead/Count")
+    public Result getUnReadNoticeCount(){
+
+        //token 那 用户id
+        String userId = "123456";
+
+        return Result.success(noticeService.getNoticeByStatusAndUserCount(userId,UNREAD));
+
+    }
+
+    @GetMapping("/Notice/Read/Count")
+    public Result getReadNoticeCount(){
+
+        //token 那 用户id
+        String userId = "123456";
+
+        return Result.success(noticeService.getNoticeByStatusAndUserCount(userId,READ));
+
+    }
+
+    @GetMapping("/Notice/Batch/Delete")
+    public Result deleteNoticeBatch(List<String> noticeIdList){
+
+        return Result.success(noticeService.deleteNoticeBatch(noticeIdList));
+
+    }
+
 }

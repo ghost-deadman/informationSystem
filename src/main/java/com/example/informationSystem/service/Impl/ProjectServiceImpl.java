@@ -101,11 +101,39 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public Pager<ProjectDTO> selectProjectDtoByUserId(int createStatus, String userId, long page, long size) {
+    public Pager<ProjectDTO> selectProjectDtoByUserIdAndCreateStatus(int createStatus, String userId, long page, long size) {
 
         Pager<ProjectDTO> projectDtoPager = new Pager<>(page, size);
 
         List<ProjectDTO> projectDtoList = projectMapper.selectProjectByCreateStatusAndUserPage(createStatus, userId, projectDtoPager.getOffset(), size);
+
+        projectDtoList = projectDtoSetSubjectData(projectDtoList);
+
+        projectDtoPager.setDataList(projectDtoList);
+
+        return projectDtoPager;
+    }
+
+    @Override
+    public Pager<ProjectDTO> selectProjectDtoByUserIdAndExecuteStatus(int executeStatus, String userId, long page, long size) {
+
+        Pager<ProjectDTO> projectDtoPager = new Pager<>(page, size);
+
+        List<ProjectDTO> projectDtoList = projectMapper.selectProjectByExecuteStatusAndUserPage(executeStatus, userId, projectDtoPager.getOffset(), size);
+
+        projectDtoList = projectDtoSetSubjectData(projectDtoList);
+
+        projectDtoPager.setDataList(projectDtoList);
+
+        return projectDtoPager;
+    }
+
+    @Override
+    public Pager<ProjectDTO> selectProjectDtoByUserId(String userId, long page, long size) {
+
+        Pager<ProjectDTO> projectDtoPager = new Pager<>(page, size);
+
+        List<ProjectDTO> projectDtoList = projectMapper.selectProjectByUserPage(userId, projectDtoPager.getOffset(), size);
 
         projectDtoList = projectDtoSetSubjectData(projectDtoList);
 
@@ -259,6 +287,15 @@ public class ProjectServiceImpl implements ProjectService {
         projectDtoPager.setDataList(projectDtoList);
 
         return projectDtoPager;
+
+    }
+
+    @Override
+    public String getProjectUserIdByProjectId(String projectId) {
+
+        Project project = projectMapper.selectById(projectId);
+
+        return project.getProjectUserId();
 
     }
 

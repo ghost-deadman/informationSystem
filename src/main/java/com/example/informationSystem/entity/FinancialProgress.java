@@ -14,8 +14,7 @@ import lombok.Value;
 @TableName(value = "financial_progress")
 public class FinancialProgress {
 
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "financial_progress_id")
+    @TableId(value = "financial_progress_id",type = IdType.ASSIGN_UUID)
     private String financialProgressId;
 
     /**

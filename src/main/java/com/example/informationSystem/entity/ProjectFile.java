@@ -17,8 +17,7 @@ public class ProjectFile {
     /**
      * 项目文件材料主键
      */
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "project_file_id")
+    @TableId(value = "project_file_id",type = IdType.ASSIGN_UUID)
     private String projectFileId;
 
     /**

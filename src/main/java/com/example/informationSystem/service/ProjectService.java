@@ -1,6 +1,5 @@
 package com.example.informationSystem.service;
 
-import com.example.informationSystem.entity.ApprovalOpinion;
 import com.example.informationSystem.entity.DTO.ProjectDTO;
 import com.example.informationSystem.entity.VO.ProjectVO;
 import com.example.informationSystem.utils.Pager;
@@ -28,14 +27,35 @@ public interface ProjectService {
     boolean deleteProjectById(List<String> projectIdList);
 
     /**
-     * 分页按项目负责人id项目扩展对象
+     * 分页按项目负责人id项目和创建状态扩展对象
+     * @param userId 项目负责人id
+     * @param page 页数
+     * @param size 每页数据条数
+     * @return 数据
+     */
+    Pager<ProjectDTO> selectProjectDtoByUserId(String userId, long page, long size);
+
+
+    /**
+     * 分页按项目负责人id项目和创建状态扩展对象
      * @param createStatus 项目状态
      * @param userId 项目负责人id
      * @param page 页数
      * @param size 每页数据条数
      * @return 数据
      */
-    Pager<ProjectDTO> selectProjectDtoByUserId(int createStatus,String userId, long page, long size);
+    Pager<ProjectDTO> selectProjectDtoByUserIdAndCreateStatus(int createStatus,String userId, long page, long size);
+
+    /**
+     * 分页按项目负责人id项目和执行状态扩展对象
+     * @param executeStatus 执行状态
+     * @param userId 项目负责人id
+     * @param page 页数
+     * @param size 每页数据条数
+     * @return 数据
+     */
+    Pager<ProjectDTO> selectProjectDtoByUserIdAndExecuteStatus(int executeStatus, String userId, long page, long size);
+
 
     /**
      * 更新项目
@@ -87,4 +107,12 @@ public interface ProjectService {
      * @return 项目扩展对象
      */
     Pager<ProjectDTO> selectProjectDtoByCreateStatusPage(int createStatus, long currentPage, long pageSize);
+
+    /**
+     * 通过项目的id获取项目负责人id
+     * @param projectId 项目id
+     * @return 项目负责人id
+     */
+    String getProjectUserIdByProjectId(String projectId);
+
 }

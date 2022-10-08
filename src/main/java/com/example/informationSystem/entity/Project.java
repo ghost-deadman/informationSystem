@@ -17,8 +17,7 @@ public class Project {
     /**
      * 主键
      */
-    @TableId(type = IdType.ASSIGN_UUID)
-    @TableField(value = "project_id")
+    @TableId(value = "project_id",type = IdType.ASSIGN_UUID)
     private String projectId;
 
     /**

@@ -54,4 +54,26 @@ public interface NoticeService {
      * @return 通知数组
      */
     IPage<Notice> selectAllByUserIdPage(int status, String informedPeople, long currentPage, long pageSize);
+
+    /**
+     * 按状态获取收件人获取邮件数量
+     * @param userId 用户id
+     * @param status 状态
+     * @return 数量
+     */
+    int getNoticeByStatusAndUserCount(String userId, int status);
+
+    /**
+     * 批量删除邮件
+     * @param noticeIdList 邮件主键数组
+     * @return 是否成功
+     */
+    boolean deleteNoticeBatch(List<String> noticeIdList);
+
+    /**
+     * 通知修改为已查看
+     * @param noticeId 项目id
+     * @return 是否成功
+     */
+    boolean updateNoticeStatusById(String noticeId);
 }

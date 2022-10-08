@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        System.out.println(66666);
+
         //添加映射路径
         registry.addMapping("/**")
                 //是否发送Cookie
