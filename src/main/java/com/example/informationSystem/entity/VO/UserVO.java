@@ -1,4 +1,4 @@
-package com.example.informationSystem.entity.vo;
+package com.example.informationSystem.entity.VO;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value = "UserLogin对象",description = "接受用户登录表单数据")
-public class UserVo {
+public class UserVO {
     @ApiModelProperty(value = "用户名",required = true)
     private String userName;
     @ApiModelProperty(value = "密码",required = true)

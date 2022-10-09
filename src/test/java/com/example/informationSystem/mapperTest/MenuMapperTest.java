@@ -26,7 +26,7 @@ public class MenuMapperTest {
      */
     @Test
     public void testGetMenu() {
-        List<Menu> strings = menuMapper.getMenusByUserId(1L);
+        List<Menu> strings = menuMapper.getMenusByUserId("1");
         if (strings != null)
             for (Menu string : strings) {
                 System.out.println(string.getEnabled());
@@ -42,7 +42,7 @@ public class MenuMapperTest {
 
     @Test
     public void testRole() {
-        List<Role> roles = roleMapper.getRoles(1L);
+        List<Role> roles = roleMapper.getRoles("1");
         for (Role role : roles) {
             System.out.println(role.getEnabled());
         }

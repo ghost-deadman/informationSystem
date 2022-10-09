@@ -33,8 +33,8 @@ public class User implements Serializable, UserDetails {
      * 主键
      */
     @ApiModelProperty(value = "id")
-    @TableId(value = "ID", type = IdType.AUTO)
-    private Long id;
+    @TableId(value = "ID", type = IdType.UUID)
+    private String id;
     /**
      * 用户名
      */

@@ -54,6 +54,12 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher # 解决swaggerUI不匹配接口
 
+# maxFileSize 单个数据大小
+  servlet:
+    multipart:
+      maxFileSize: 30MB
+  # maxRequestSize 是总数据大小
+      maxRequestSize: 200MB
 
 
 mybatis-plus:
@@ -68,4 +74,5 @@ logging:
   level:
     com.example.informationSystem.mapper: debug
 
-
+file:
+  path: files

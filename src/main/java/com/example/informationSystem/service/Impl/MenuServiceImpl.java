@@ -28,7 +28,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     @Override
     public List<Menu> getMenusByUserId() {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long id = principal.getId();
+        String id = principal.getId();
         List<Menu> menus =  redisCache.getCacheList("menu:" + id);
         if (CollectionUtils.isEmpty(menus)) {
             menus = menuMapper.getMenusByUserId(id);

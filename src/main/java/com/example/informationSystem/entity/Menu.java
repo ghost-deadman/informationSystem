@@ -28,9 +28,9 @@ import java.util.List;
 public class Menu implements Serializable {
     private static final long serialVersionUID = -54979041104113736L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.UUID)
     @ApiModelProperty(value = "id")
-    private Long id;
+    private String id;
 
     /**
      * url

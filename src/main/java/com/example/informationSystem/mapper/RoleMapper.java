@@ -12,5 +12,5 @@ public interface RoleMapper {
      * @param id 用户id
      * @return 用户角色
      */
-    List<Role> getRoles(Long id);
+    List<Role> getRoles(String id);
 }

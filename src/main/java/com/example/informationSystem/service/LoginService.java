@@ -3,8 +3,8 @@ package com.example.informationSystem.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.informationSystem.entity.Role;
 import com.example.informationSystem.entity.User;
-import com.example.informationSystem.entity.vo.UserVo;
-import com.example.informationSystem.utils.result.Result;
+import com.example.informationSystem.entity.VO.UserVO;
+import com.example.informationSystem.utils.Result;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -15,7 +15,7 @@ public interface LoginService extends IService<User> {
      * @param user 用户信息
      * @return 认证结果
      */
-    Result login(UserVo user, HttpServletRequest request);
+    Result login(UserVO user, HttpServletRequest request);
 
     /**
      * 退出登录
@@ -23,6 +23,17 @@ public interface LoginService extends IService<User> {
      */
     Result logout();
 
+    /**
+     * 获取当前用户id
+     * @return 用户id
+     */
+    String getUserId();
+
+    /**
+     * 获取用户角色部门id
+     * @return 部门id
+     */
+    String getUserUnitId();
 
     /**
      * 获取当前用户信息
@@ -36,6 +47,6 @@ public interface LoginService extends IService<User> {
      * @param id 用户id
      * @return 用户角色
      */
-    List<Role> getRoles(Long id);
+    List<Role> getRoles(String id);
 
 }

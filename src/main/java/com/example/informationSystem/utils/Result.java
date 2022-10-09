@@ -1,4 +1,4 @@
-package com.example.informationSystem.utils.result;
+package com.example.informationSystem.utils;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,7 +21,7 @@ public class Result {
     @ApiModelProperty(value = "状态信息")
     private String message;
     @ApiModelProperty(value = "返回数据对象")
-    private Object data;
+    private Object obj;
 
     public static Result success(String message){
         return new Result(200,message,null);

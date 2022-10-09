@@ -1,10 +1,10 @@
 package com.example.informationSystem.controller;
 
 import com.example.informationSystem.entity.User;
-import com.example.informationSystem.entity.vo.UserVo;
+import com.example.informationSystem.entity.VO.UserVO;
 import com.example.informationSystem.service.LoginService;
 import com.example.informationSystem.utils.RedisCache;
-import com.example.informationSystem.utils.result.Result;
+import com.example.informationSystem.utils.Result;
 import com.example.informationSystem.utils.yzm.VerifyCodeUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,7 +31,7 @@ public class LoginController {
 
     @ApiOperation(value = "登录验证，返回token")
     @PostMapping("/user/login")
-    public Result login(@RequestBody UserVo user,HttpServletRequest request){
+    public Result login(@RequestBody UserVO user, HttpServletRequest request){
         return loginService.login(user, request);
     }
 
@@ -85,13 +85,9 @@ public class LoginController {
         // 生成随机字串
         String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
         System.out.println("验证码："+verifyCode);
+        //获取IP地址
         String imgUUID = request.getRemoteAddr();
         redisCache.setCacheObject(imgUUID, verifyCode, 60 * 2, TimeUnit.SECONDS);
-//        HttpSession session = request.getSession();
-//        session.removeAttribute("captcha");
-//        session.setAttribute("captcha", verifyCode);
-
-//        String captcha = (String) session.getAttribute("captcha");
         System.out.println("session1: " + imgUUID);
 
         // 生成图片
@@ -101,35 +97,5 @@ public class LoginController {
 
     }
 
-/*
-    // 获取验证码
-    @GetMapping("/yzm")
-    @ResponseBody
-    public Result getCaptcha() {
-        //画图工具类
-        CaptchaUtil imageCode = new CaptchaUtil();
-        // 获取验证码对应的 base64  编码
-        String base64 = CaptchaUtil.getBase64(imageCode.getImage());
-
-        // 获取对应的 验证码 code
-        String code = imageCode.getCode();
-
-        // 生成 UUID
-        String imgUUID = UUID.randomUUID().toString();
-
-        // 封装 获取的 验证码相关的数据 到 验证码对象中，并响应
-        ImgResult imgResult = new ImgResult();
-        imgResult.setImgUUID(imgUUID);
-        imgResult.setImg(base64);
-        imgResult.setCode(code);
-        System.out.println("code1: " + code);
-        // 将验证码的信息保存到 redis中,并设置 有效时间！
-        redisCache.setCacheObject(imgUUID, code, 60 * 2, TimeUnit.SECONDS);
-//        captchaCache.setEx(imgUUID, 60 * 2, code);
-        // 将封装好的验证码对象响应给前端
-        return Result.success(imgResult);
-
-    }
-*/
 }
 
