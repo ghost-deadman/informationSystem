@@ -81,7 +81,7 @@ public class ProjectServiceImpl implements ProjectService {
 
             String fileName = path.substring(path.lastIndexOf("\\") + 1);
 
-            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectId, fileName, path);
+            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectId, fileName, path,0);
 
             projectFileMapper.insert(projectFile);
 
@@ -189,6 +189,33 @@ public class ProjectServiceImpl implements ProjectService {
         projectUpdateWrapper.set("create_status",createStatus);
 
         projectMapper.update(null,projectUpdateWrapper);
+
+        return true;
+
+    }
+
+    @Override
+    public boolean updateProjectExecuteStatusById(String projectId, int executeStatus) {
+
+        UpdateWrapper<Project> projectUpdateWrapper = new UpdateWrapper<>();
+
+        projectUpdateWrapper.eq("project_id",projectId);
+
+        projectUpdateWrapper.set("execute_status",executeStatus);
+
+        projectMapper.update(null,projectUpdateWrapper);
+
+        return true;
+    }
+
+    @Override
+    public boolean updateProjectCreateStatusToStartByIdList(List<String> projectIdList) {
+
+        for (String projectId : projectIdList) {
+
+            projectMapper.updateProjectCreateStatusToStartById(projectId);
+
+        }
 
         return true;
 

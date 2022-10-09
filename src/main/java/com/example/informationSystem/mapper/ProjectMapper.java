@@ -184,4 +184,18 @@ public interface ProjectMapper extends BaseMapper<Project> {
     })
     List<ProjectDTO> selectProjectByCreateStatusPage(int createStatus, long page, long size);
 
+    /**
+     * 按项目查询项目名称
+     * @param projectId 项目id
+     * @return 项目名称
+     */
+    @Select("select project_name from project where project_id = #{projectId}")
+    String selectProjectNameById(String projectId);
+
+    /**
+     * 将项目还原为草稿状态
+     * @param projectId 项目id
+     */
+    @Update("update project set create_status = 0,execute_status = 0 where project_id = #{projectId}")
+    void updateProjectCreateStatusToStartById(String projectId);
 }

@@ -121,11 +121,12 @@ public class FileUtils {
 
         String originalFilename = file.getOriginalFilename();
 
-        String path = new File("src/main/resources").getCanonicalPath();
+        String path = new File("src/main/resources").getCanonicalPath() + File.separator + basePath;
 
         if(originalFilename != null){
 
-            File dir = new File(path + "/" + basePath + "/" + originalFilename);
+            //先创建路径
+            File dir = new File(path);
 
             if (!dir.exists()) {
 
@@ -133,9 +134,12 @@ public class FileUtils {
 
             }
 
-            file.transferTo(dir);
+            //在创建文件
+            File fileTrue = new File(path + File.separator + originalFilename);
 
-            return dir.getPath();
+            file.transferTo(fileTrue);
+
+            return fileTrue.getPath();
 
         }
 

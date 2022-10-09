@@ -1,13 +1,10 @@
 package com.example.informationSystem.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.informationSystem.entity.DTO.ProjectDraftDTO;
 import com.example.informationSystem.entity.ProjectDraft;
-import com.example.informationSystem.entity.VO.ProjectDraftVO;
 import com.example.informationSystem.service.ProjectDraftService;
 import com.example.informationSystem.utils.FileUtils;
 import com.example.informationSystem.utils.Result;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,8 +71,6 @@ public class ProjectDraftController {
     public Result updateProjectDraftById(ProjectDraft projectDraft, @RequestParam(name = "file") List<MultipartFile> file) throws IOException {
 
         if (file == null) {
-
-
             if (projectDraftService.updateProjectDraft(projectDraft)) {
 
                 return Result.success("修改成功");
@@ -115,7 +110,6 @@ public class ProjectDraftController {
             return Result.success("删除成功");
 
         }
-
         return Result.error("删除失败");
 
     }

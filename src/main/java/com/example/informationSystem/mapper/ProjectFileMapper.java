@@ -66,7 +66,15 @@ public interface ProjectFileMapper extends BaseMapper<ProjectFile> {
      * @param projectId 项目id
      * @return 项目文件
      */
-    @Select("select * from project_file where project_id = #{projectId}")
+    @Select("select * from project_file where project_id = #{projectId} And type = 0")
     List<ProjectFile> selectProjectFileByProjectId(String projectId);
+
+    /**
+     * 按项目id查询验收报告文件
+     * @param projectId 项目id
+     * @return 项目文件
+     */
+    @Select("select * from project_file where project_id = #{projectId} And type > 5")
+    List<ProjectFile> selectInspectionProjectFileByProjectId(String projectId);
 
 }

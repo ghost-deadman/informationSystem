@@ -1,11 +1,11 @@
 package com.example.informationSystem.controller;
 
 import com.example.informationSystem.entity.Notice;
+import com.example.informationSystem.service.LoginService;
 import com.example.informationSystem.service.NoticeService;
 import com.example.informationSystem.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,34 +24,36 @@ public class NoticeController {
     @Autowired
     private NoticeService noticeService;
 
-    @RequestMapping("/Notice/UnRead/List")
+    @Autowired
+    private LoginService loginService;
+
+
+    @GetMapping("/Notice/UnRead/List")
     public Result selectUnread(long currentPage ,long pageSize) {
 
         //token 拿用户id
-        String userId = "123456";
-
-
+        String userId = loginService.getUserId();
 
         return Result.success(("查询成功"), noticeService.selectAllByUserIdPage(UNREAD,userId,currentPage,pageSize));
 
     }
 
-    @RequestMapping("/Notice/Read/List")
+    @GetMapping("/Notice/Read/List")
     public Result selectRead(long currentPage ,long pageSize) {
 
         //token 拿用户id
-        String userId = "123456";
+        String userId = loginService.getUserId();
 
         return Result.success(("查询成功"), noticeService.selectAllByUserIdPage(READ,userId,currentPage,pageSize));
 
     }
 
-    @RequestMapping("/Notice/Id/info")
+    @GetMapping("/Notice/Id/info")
     public Result selectById(Integer noticeId) {
         return Result.success("查询成功", noticeService.selectById(noticeId));
     }
 
-    @RequestMapping("/Notice/Id/Update")
+    @GetMapping("/Notice/Id/Update")
     public Result updateNoticeStatusById(String noticeId) {
 
         if (noticeService.updateNoticeStatusById(noticeId)) {
@@ -99,7 +101,7 @@ public class NoticeController {
     public Result getUnReadNoticeCount(){
 
         //token 那 用户id
-        String userId = "123456";
+        String userId = loginService.getUserId();
 
         return Result.success(noticeService.getNoticeByStatusAndUserCount(userId,UNREAD));
 
@@ -109,7 +111,7 @@ public class NoticeController {
     public Result getReadNoticeCount(){
 
         //token 那 用户id
-        String userId = "123456";
+        String userId = loginService.getUserId();
 
         return Result.success(noticeService.getNoticeByStatusAndUserCount(userId,READ));
 

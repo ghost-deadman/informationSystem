@@ -95,7 +95,7 @@ public class ProjectBudgetServiceImpl implements ProjectBudgetService {
     @Override
     public Page<ProjectBudgetDTO> selectOneStatusByUnitId(Integer current, Integer size, Integer status) {
         // ToDo 获取当前用户部门id
-        String id = "123456";
+        String id = "1";
         Page<ProjectBudgetDTO> iPage = new Page<>(current, size);
         return projectBudgetMapper.getPageByUnitId(iPage, id, status);
     }

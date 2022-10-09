@@ -5,6 +5,8 @@ import com.example.informationSystem.entity.DTO.ProjectBudgetDTO;
 import com.example.informationSystem.entity.VO.ProjectBudgetVO;
 import com.example.informationSystem.service.ProjectBudgetService;
 import com.example.informationSystem.utils.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author pcdn
  */
 @RestController
-
+@Api(tags = "预算申请和管理")
 public class ProjectBudgetController {
 
     @Autowired
@@ -25,7 +27,8 @@ public class ProjectBudgetController {
      * @param projectBudgetVO 项目预算
      * @return Result对象，判断是否增加成功
      */
-    @RequestMapping("/Build/ProjectBudget/Insert")
+    @ApiOperation(value = "用户——保存用户申请")
+    @PostMapping("/Build/ProjectBudget/Insert")
     public Result saveProjectBudget(ProjectBudgetVO projectBudgetVO) {
 
         return projectBudgetService.addProjectBudget(projectBudgetVO, 0);
@@ -36,6 +39,7 @@ public class ProjectBudgetController {
      * @param projectBudgetVO 项目预算
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "用户——保存并提交用户申请")
     @PostMapping("/Build/ProjectBudget/Submit/Insert")
     public Result saveAndSubmitProjectBudget(@RequestBody ProjectBudgetVO projectBudgetVO) {
 
@@ -48,6 +52,7 @@ public class ProjectBudgetController {
      * @param projectBudgetId 项目预算id
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "用户——提交用户申请")
     @GetMapping("/Build/ProjectBudget/User/Submit/Update")
     public Result submitProjectBudget(String projectBudgetId ) {
 
@@ -68,6 +73,7 @@ public class ProjectBudgetController {
      * @param pbId 项目预算id
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "单位负责人——通过用户申请")
     @GetMapping("/Build/ProjectBudget/PrincipalPass/Update")
     public Result passProjectBudget(@Param("pbId") String pbId ) {
         boolean b = projectBudgetService.checkProjectBudget(pbId, 2);
@@ -83,6 +89,7 @@ public class ProjectBudgetController {
      * @param pbId 项目预算id
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "单位负责人——不通过用户申请")
     @GetMapping("/Build/ProjectBudget/PrincipalUnPass/Update")
     public Result unPassProjectBudget(@Param("pbId") String pbId ) {
         boolean b = projectBudgetService.checkProjectBudget(pbId, 3);
@@ -98,7 +105,8 @@ public class ProjectBudgetController {
      * @param pbId 项目预算id
      * @return Result对象，判断是否增加成功
      */
-    @GetMapping("/Centrailized/ProjectBudget/AdminPass/Update")
+    @ApiOperation(value = "归口部门负责人——通过用户申请")
+    @GetMapping("/Centralized/ProjectBudget/AdminPass/Update")
     public Result centralizedAdminPassProjectBudget(@Param("pbId") String pbId ) {
         boolean b = projectBudgetService.checkProjectBudget(pbId, 4);
         if (b) {
@@ -113,6 +121,7 @@ public class ProjectBudgetController {
      * @param pbId 项目预算id
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "归口部门负责人——不通过用户申请")
     @GetMapping("/Centralized/ProjectBudget/AdminUnPass/Update")
     public Result centralizedAdminFailureProjectBudget(@Param("pbId") String pbId ){
         boolean b = projectBudgetService.checkProjectBudget(pbId, 5);
@@ -128,6 +137,7 @@ public class ProjectBudgetController {
      * @param pbId 项目预算id
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "总体部门负责人——通过用户申请")
     @GetMapping("/Overall/ProjectBudget/AdminPass/Update")
     public Result overallAdminPassProjectBudget(@Param("pbId") String pbId ) {
         boolean b = projectBudgetService.checkProjectBudget(pbId, 6);
@@ -143,6 +153,7 @@ public class ProjectBudgetController {
      * @param pbId 项目预算id
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "财务部门——通过用户申请")
     @GetMapping("/Logistics/ProjectBudget/PullMoney/Update")
     public Result logisticsPullMoneyProjectBudget(@Param("pbId") String pbId ) {
         boolean b = projectBudgetService.checkProjectBudget(pbId, 7);
@@ -158,6 +169,7 @@ public class ProjectBudgetController {
      * @param pbId 项目预算id
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "财务部门——通过用户申请")
     @GetMapping("/Logistics/ProjectBudget/PullMoneyOver/Update")
     public Result logisticsPullMoneyOverProjectBudget(@Param("pbId") String pbId ) {
 
@@ -174,6 +186,7 @@ public class ProjectBudgetController {
      * 建筑部门获取未审核项目预算数量
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "用户——查询未提交数量")
     @GetMapping("/Build/ProjectBudget/ProjectBudgetCount/User/Info")
     public Result projectUserGetProjectBudgetCount() {
 
@@ -185,6 +198,7 @@ public class ProjectBudgetController {
      * 建筑部门获取未审核项目预算数量
      * @return Result对象，判断是否增加成功
      */
+    @ApiOperation(value = "单位负责人——查询未审核数量")
     @GetMapping("/Build/ProjectBudget/ProjectBudgetCount/Info")
     public Result principalGetProjectBudgetCount() {
 
@@ -232,6 +246,7 @@ public class ProjectBudgetController {
      * @param size 大小
      * @return 结果
      */
+    @ApiOperation(value = "用户——通过状态获取预算列表")
     @GetMapping("/Build/ProjectBudget/User/Status")
     public Result searchProjectBudgetListByStatus(@Param("status") Integer status, @Param("current") Integer current, @Param("size") Integer size) {
 
@@ -251,6 +266,7 @@ public class ProjectBudgetController {
      * @param size 大小
      * @return 结果
      */
+    @ApiOperation(value = "单位负责人——通过状态获取预算列表")
     @GetMapping("/Build/ProjectBudget/Principal/Status")
     public Result searchProjectBudgetsOfPrincipal(@Param("status") Integer status, @Param("current") Integer current, @Param("size") Integer size) {
 
@@ -269,7 +285,7 @@ public class ProjectBudgetController {
      * @param size 大小
      * @return 结果
      */
-
+    @ApiOperation(value = "归口部门——通过状态获取预算列表")
     @GetMapping("/Centralized/ProjectBudget/Admin/Status")
     public Result searchProjectBudgetsOfAdmin(@Param("status") Integer status, @Param("current") Integer current, @Param("size") Integer size) {
 
@@ -289,6 +305,7 @@ public class ProjectBudgetController {
      * @param size 大小
      * @return 结果
      */
+    @ApiOperation(value = "总体部门——通过状态获取预算列表")
     @GetMapping("/Overall/ProjectBudget/Admin/Status")
     public Result searchProjectBudgetPass(@Param("status") Integer status, @Param("current") Integer current, @Param("size") Integer size) {
         Page<ProjectBudgetDTO> page = projectBudgetService.selectAllPages(current, size, status);

@@ -81,6 +81,20 @@ public interface ProjectService {
     boolean updateProjectCreateStatusById(String projectId, int createStatus);
 
     /**
+     * 更新项目执行状态
+     * @param projectId 项目id
+     * @param executeStatus 状态
+     * @return 是否成功
+     */
+    boolean updateProjectExecuteStatusById(String projectId, int executeStatus);
+
+    /**
+     * 按项目id数组将项目还原为草稿状态
+     * @param projectIdList 项目id数组
+     * @return 是否成功
+     */
+    boolean updateProjectCreateStatusToStartByIdList(List<String> projectIdList);
+    /**
      * 通过单位和创建状态查询项目扩展类
      * @param createStatus 创建状态
      * @param unitId 单位id

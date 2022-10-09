@@ -3,15 +3,16 @@ package com.example.informationSystem.controller;
 import com.example.informationSystem.entity.DTO.ProjectDTO;
 import com.example.informationSystem.entity.Notice;
 import com.example.informationSystem.entity.VO.ProjectVO;
+import com.example.informationSystem.service.LoginService;
 import com.example.informationSystem.service.NoticeService;
 import com.example.informationSystem.service.ProjectService;
 import com.example.informationSystem.utils.FileUtils;
 import com.example.informationSystem.utils.Pager;
 import com.example.informationSystem.utils.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,6 +25,7 @@ import java.util.UUID;
  * @date ：Created in 2022/9/16 9:33
  */
 @RestController
+@Api(tags = "项目管理")
 public class ProjectController {
 
     private final static String NOTICE_NAME = "审批失败通知";
@@ -51,60 +53,69 @@ public class ProjectController {
     private NoticeService noticeService;
 
     @Autowired
+    private LoginService loginService;
+    @Autowired
     private FileUtils fileUpload;
 
     /**
      * 文件上传
+     *
      * @param file 文件
      * @return 是否成功
      */
-    @RequestMapping("/Build/Project/Insert")
-    public Result addProject(ProjectVO projectVO, @RequestParam(name = "file",required = false) List<MultipartFile> file) throws IOException {
+    @ApiOperation(value = "用户——插入项目数据")
+    @PostMapping("/Build/Project/Insert")
+    public Result addProject(ProjectVO projectVO, @RequestParam(name = "file", required = false) List<MultipartFile> file) throws IOException {
 
-            if(file == null){
+        if (file == null) {
 
-                return Result.error("文件未收到,系统异常");
-            }
+            return Result.error("文件未收到,系统异常");
+        }
 
-            List<String> pathList = fileUpload.upload(file);
+        List<String> pathList = fileUpload.upload(file);
 
-            String userId = "123456";
+        String userId = loginService.getUserId();
+        System.out.println("当前用户id: " + userId);
 
-            projectVO.setProjectUserId(userId);
+//        String userId = "123456";
+
+        projectVO.setProjectUserId(userId);
 
         System.out.println(projectVO.getProjectCategoryId());
 
-             if(projectService.addProject(projectVO, pathList)) {
+        if (projectService.addProject(projectVO, pathList)) {
 
 
-                 return Result.success("项目创建成功");
+            return Result.success("项目创建成功");
 
-             }
+        }
 
-             return Result.error("创建项目失败");
+        return Result.error("创建项目失败");
 
-     }
+    }
 
-    @RequestMapping("/Build/Project/Id/Update")
-    public Result updateProjectById(ProjectVO projectVO, @RequestParam(name = "file",required = false) List<MultipartFile> file) throws IOException {
+    @ApiOperation(value = "用户——更新项目数据")
+    @PostMapping("/Build/Project/Id/Update")
+    public Result updateProjectById(ProjectVO projectVO, @RequestParam(name = "file", required = false) List<MultipartFile> file) throws IOException {
 
-        if(file == null){
+        if (file == null) {
 
-            if(projectService.updateProject(projectVO)) {
+            if (projectService.updateProject(projectVO)) {
 
                 Result.success("项目修改成功");
 
-            }else{
+            } else {
 
                 Result.error("项目修改失败");
 
             }
 
-        }else {
+        } else {
 
             List<String> pathList = fileUpload.upload(file);
 
-            String userId = "123456";
+            String userId = loginService.getUserId();
+//            String userId = "123456";
 
             projectVO.setProjectUserId(userId);
 
@@ -123,10 +134,11 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/Id/Delete")
+    @ApiOperation(value = "用户——删除项目数据")
+    @GetMapping("/Build/Project/Id/Delete")
     public Result deleteProjectById(List<String> projectIdList) {
 
-        if(projectService.deleteProjectById(projectIdList)){
+        if (projectService.deleteProjectById(projectIdList)) {
 
             return Result.success("删除成功");
 
@@ -136,137 +148,145 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/User/CreateStatus/Page/List")
-    public Result selectProjectByUserIdAndCreateStatus(int createStatus,long currentPage, long pageSize){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/User/CreateStatus/Page/List")
+    public Result selectProjectByUserIdAndCreateStatus(int createStatus, long currentPage, long pageSize) {
 
-        //token拿userId
-        String userId = "123456";
+        String userId = loginService.getUserId();
 
-        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserIdAndCreateStatus(createStatus,userId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserIdAndCreateStatus(createStatus, userId, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPage);
-
-    }
-
-    @RequestMapping("/Build/Project/User/ExecuteStatus/Page/List")
-    public Result selectProjectByUserIdAndExecuteStatus(int executeStatus,long currentPage, long pageSize){
-
-        //token拿userId
-        String userId = "123456";
-
-        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserIdAndExecuteStatus(executeStatus,userId,currentPage,pageSize);
-
-        return Result.success("查询成功",projectDtoPage);
+        return Result.success("查询成功", projectDtoPage);
 
     }
 
-    @RequestMapping("/Build/Project/User/Page/List")
-    public Result selectProjectByUserId(long currentPage, long pageSize){
+    @ApiOperation(value = "用户——查询执行项目数据")
+    @GetMapping("/Build/Project/User/ExecuteStatus/Page/List")
+    public Result selectProjectByUserIdAndExecuteStatus(int executeStatus, long currentPage, long pageSize) {
 
-        //token拿userId
-        String userId = "123456";
+        String userId = loginService.getUserId();
 
-        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserId(userId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserIdAndExecuteStatus(executeStatus, userId, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPage);
+        return Result.success("查询成功", projectDtoPage);
 
     }
 
-    @RequestMapping("/Build/Project/Unit/AdminCreateStatus/Page/List")
-    public Result selectProjectByUnitAndAdminCreateStatus(long currentPage,long pageSize){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/User/Page/List")
+    public Result selectProjectByUserId(long currentPage, long pageSize) {
+
+        String userId = loginService.getUserId();
+
+        Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserId(userId, currentPage, pageSize);
+
+        return Result.success("查询成功", projectDtoPage);
+
+    }
+
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Unit/AdminCreateStatus/Page/List")
+    public Result selectProjectByUnitAndAdminCreateStatus(long currentPage, long pageSize) {
 
         //token 那unitId
-        String unitId = "1";
+        String unitId = loginService.getUserUnitId();
 
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PROJECT_SUBMIT,unitId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PROJECT_SUBMIT, unitId, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPager);
+        return Result.success("查询成功", projectDtoPager);
 
     }
 
-    @RequestMapping({"/Build/Project/Unit/PrincipalCreateStatus/Page/List","/Build/Project/Unit/AdminCreateStatusSuccess/Page/List"})
-    public Result selectProjectByUnitAndPrincipalCreateStatus(long currentPage,long pageSize){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping({"/Build/Project/Unit/PrincipalCreateStatus/Page/List", "/Build/Project/Unit/AdminCreateStatusSuccess/Page/List"})
+    public Result selectProjectByUnitAndPrincipalCreateStatus(long currentPage, long pageSize) {
 
         //token 那unitId
-        String unitId = "1";
+        String unitId = loginService.getUserUnitId();
 
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(ADMIN_SUBMIT_SUCCESS,unitId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(ADMIN_SUBMIT_SUCCESS, unitId, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPager);
+        return Result.success("查询成功", projectDtoPager);
 
     }
 
-    @RequestMapping("/Build/Project/Unit/AdminCreateStatusFailure/Page/List")
-    public Result selectProjectByUnitAndAdminCreateStatusFailure(long currentPage,long pageSize){
+    @GetMapping("/Build/Project/Unit/AdminCreateStatusFailure/Page/List")
+    public Result selectProjectByUnitAndAdminCreateStatusFailure(long currentPage, long pageSize) {
 
         //token 那unitId
-        String unitId = "1";
+        String unitId = loginService.getUserUnitId();
 
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(ADMIN_SUBMIT_FAILURE,unitId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(ADMIN_SUBMIT_FAILURE, unitId, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPager);
+        return Result.success("查询成功", projectDtoPager);
 
     }
 
-    @RequestMapping("/Build/Project/Unit/PrincipalCreateStatusSuccess/Page/List")
-    public Result selectProjectByUnitAndPrincipalCreateStatusSuccess(long currentPage,long pageSize){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Unit/PrincipalCreateStatusSuccess/Page/List")
+    public Result selectProjectByUnitAndPrincipalCreateStatusSuccess(long currentPage, long pageSize) {
 
         //token 那unitId
-        String unitId = "1";
+        String unitId = loginService.getUserUnitId();
 
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PRINCIPAL_SUBMIT_SUCCESS,unitId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PRINCIPAL_SUBMIT_SUCCESS, unitId, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPager);
+        return Result.success("查询成功", projectDtoPager);
 
     }
 
-    @RequestMapping("/Build/Project/Unit/PrincipalCreateStatusFailure/Page/List")
-    public Result selectProjectByUnitAndPrincipalCreateStatusFailure(long currentPage,long pageSize){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Unit/PrincipalCreateStatusFailure/Page/List")
+    public Result selectProjectByUnitAndPrincipalCreateStatusFailure(long currentPage, long pageSize) {
 
         //token 那unitId
-        String unitId = "1";
+        String unitId = loginService.getUserUnitId();
 
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PRINCIPAL_SUBMIT_FAILURE,unitId,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByUnitAndCreateStatus(PRINCIPAL_SUBMIT_FAILURE, unitId, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPager);
-
-    }
-
-    @RequestMapping({"/Centralized/Project/AdminCreateStatus/Page/List",})
-    public Result selectProjectCentralizedAdminCreateStatus(long currentPage,long pageSize){
-
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(PRINCIPAL_SUBMIT_SUCCESS,currentPage,pageSize);
-
-        return Result.success("查询成功",projectDtoPager);
+        return Result.success("查询成功", projectDtoPager);
 
     }
 
-    @RequestMapping({"/Centralized/Project/AdminCreateStatusSuccess/Page/List",})
-    public Result selectProjectCentralizedAdminCreateStatusSuccess(long currentPage,long pageSize){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping({"/Centralized/Project/AdminCreateStatus/Page/List",})
+    public Result selectProjectCentralizedAdminCreateStatus(long currentPage, long pageSize) {
 
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(CENTRALIZED_SUBMIT_SUCCESS,currentPage,pageSize);
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(PRINCIPAL_SUBMIT_SUCCESS, currentPage, pageSize);
 
-        return Result.success("查询成功",projectDtoPager);
-
-    }
-
-    @RequestMapping({"/Centralized/Project/AdminCreateStatusFailure/Page/List",})
-    public Result selectProjectCentralizedAdminCreateStatusFailure(long currentPage,long pageSize){
-
-        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(CENTRALIZED_SUBMIT_FAILURE,currentPage,pageSize);
-
-        return Result.success("查询成功",projectDtoPager);
+        return Result.success("查询成功", projectDtoPager);
 
     }
 
-    @RequestMapping("/Build/Project/Id/ProjectSubmit/Update")
-    public Result projectSubmitById(String projectId){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping({"/Centralized/Project/AdminCreateStatusSuccess/Page/List",})
+    public Result selectProjectCentralizedAdminCreateStatusSuccess(long currentPage, long pageSize) {
 
-        if(projectService.updateProjectCreateStatusById(projectId,PROJECT_SUBMIT)){
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(CENTRALIZED_SUBMIT_SUCCESS, currentPage, pageSize);
+
+        return Result.success("查询成功", projectDtoPager);
+
+    }
+
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping({"/Centralized/Project/AdminCreateStatusFailure/Page/List",})
+    public Result selectProjectCentralizedAdminCreateStatusFailure(long currentPage, long pageSize) {
+
+        Pager<ProjectDTO> projectDtoPager = projectService.selectProjectDtoByCreateStatusPage(CENTRALIZED_SUBMIT_FAILURE, currentPage, pageSize);
+
+        return Result.success("查询成功", projectDtoPager);
+
+    }
+
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Id/ProjectSubmit/Update")
+    public Result projectSubmitById(String projectId) {
+
+        if (projectService.updateProjectCreateStatusById(projectId, PROJECT_SUBMIT)) {
 
             return Result.success("项目提交成功");
 
-        }else{
+        } else {
 
             return Result.success("项目提交失败");
 
@@ -274,16 +294,17 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/Id/AdminApprove/Update")
-    public Result adminApproveById(String projectId){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Id/AdminApprove/Update")
+    public Result adminApproveById(String projectId) {
 
         System.out.println(projectId);
 
-        if(projectService.updateProjectCreateStatusById(projectId,ADMIN_SUBMIT_SUCCESS)){
+        if (projectService.updateProjectCreateStatusById(projectId, ADMIN_SUBMIT_SUCCESS)) {
 
             return Result.success("项目审批成功");
 
-        }else{
+        } else {
 
             return Result.success("系统异常");
 
@@ -291,24 +312,25 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/Id/AdminApproveFailure/Update")
-    public Result adminApproveFailureById(String projectId){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Id/AdminApproveFailure/Update")
+    public Result adminApproveFailureById(String projectId) {
 
-        if(projectService.updateProjectCreateStatusById(projectId,ADMIN_SUBMIT_FAILURE)){
+        if (projectService.updateProjectCreateStatusById(projectId, ADMIN_SUBMIT_FAILURE)) {
 
             String noticeName = "建设部门";
 
             String noticeContent = "你的项目在建设部门审批失败,请检查项目申请信息或材料,";
 
-            if(addSystemNotice(noticeName + NOTICE_NAME,noticeContent + NOTICE_CONTENT,projectId)){
+            if (addSystemNotice(noticeName + NOTICE_NAME, noticeContent + NOTICE_CONTENT, projectId)) {
 
-                return Result.success("项目审批失败,已发送邮件");
+                return Result.success("项目驳回成功,已发送邮件");
 
             }
 
             return Result.error("项目审批失败,发送失败");
 
-        }else{
+        } else {
 
             return Result.success("系统异常");
 
@@ -316,17 +338,18 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/Id/PrincipalApprove/Update")
-    public Result principalApproveById(String projectId, String opinion){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Id/PrincipalApprove/Update")
+    public Result principalApproveById(String projectId, String opinion) {
 
         //token 拿用户id
-        String userId = "123456";
+        String userId = loginService.getUserId();
 
         System.out.println(opinion);
 
-        if(projectService.updateProjectCreateStatusById(projectId,PRINCIPAL_SUBMIT_SUCCESS)){
+        if (projectService.updateProjectCreateStatusById(projectId, PRINCIPAL_SUBMIT_SUCCESS)) {
 
-            if(projectService.setApprovalOpinion(projectId,userId,opinion)){
+            if (projectService.setApprovalOpinion(projectId, userId, opinion)) {
 
                 return Result.success("项目审批成功");
 
@@ -334,7 +357,7 @@ public class ProjectController {
 
             return Result.success("意见填写失败");
 
-        }else{
+        } else {
 
             return Result.success("系统异常");
 
@@ -342,24 +365,25 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/Id/PrincipalApproveFailure/Update")
-    public Result principalApproveFailureById(String projectId){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Id/PrincipalApproveFailure/Update")
+    public Result principalApproveFailureById(String projectId) {
 
-        if(projectService.updateProjectCreateStatusById(projectId,PRINCIPAL_SUBMIT_FAILURE)){
+        if (projectService.updateProjectCreateStatusById(projectId, PRINCIPAL_SUBMIT_FAILURE)) {
 
             String noticeName = "建设部门";
 
             String noticeContent = "你的项目在建设部门单位管理员审批失败,请修改完善申报任务书,";
 
-            if(addSystemNotice(noticeName + NOTICE_NAME,noticeContent + NOTICE_CONTENT,projectId)){
+            if (addSystemNotice(noticeName + NOTICE_NAME, noticeContent + NOTICE_CONTENT, projectId)) {
 
-                return Result.success("项目审批失败,已发送邮件");
+                return Result.success("项目驳回成功,已发送邮件");
 
             }
 
             return Result.error("项目审批失败,发送失败");
 
-        }else{
+        } else {
 
             return Result.success("系统异常");
 
@@ -367,14 +391,15 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Centralized/Project/Id/AdminApprove/Update")
-    public Result centralizedAdminApproveById(String projectId){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Centralized/Project/Id/AdminApprove/Update")
+    public Result centralizedAdminApproveById(String projectId) {
 
-        if(projectService.updateProjectCreateStatusById(projectId,CENTRALIZED_SUBMIT_SUCCESS)){
+        if (projectService.updateProjectCreateStatusById(projectId, CENTRALIZED_SUBMIT_SUCCESS)) {
 
             return Result.success("项目审批成功");
 
-        }else{
+        } else {
 
             return Result.success("系统异常");
 
@@ -384,9 +409,10 @@ public class ProjectController {
 
     /**
      * 审批失败系统发送邮件
+     *
      * @return 是否成功
      */
-    private boolean addSystemNotice(String name,String content,String projectId){
+    private boolean addSystemNotice(String name, String content, String projectId) {
 
         Notice notice = new Notice();
 
@@ -406,24 +432,25 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Centralized/Project/Id/AdminApproveFailure/Update")
-    public Result centralizedAdminApproveFailureById(String projectId){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Centralized/Project/Id/AdminApproveFailure/Update")
+    public Result centralizedAdminApproveFailureById(String projectId) {
 
-        if(projectService.updateProjectCreateStatusById(projectId,CENTRALIZED_SUBMIT_FAILURE)){
+        if (projectService.updateProjectCreateStatusById(projectId, CENTRALIZED_SUBMIT_FAILURE)) {
 
             String noticeName = "归口部门";
 
             String noticeContent = "你的项目在归口部门审批失败,请减低预算相关实际需求,";
 
-            if(addSystemNotice(noticeName + NOTICE_NAME,noticeContent + NOTICE_CONTENT,projectId)){
+            if (addSystemNotice(noticeName + NOTICE_NAME, noticeContent + NOTICE_CONTENT, projectId)) {
 
-                return Result.success("项目审批失败,已发送邮件");
+                return Result.success("项目驳回成功,已发送邮件");
 
             }
 
             return Result.error("项目审批失败,发送失败");
 
-        }else{
+        } else {
 
             return Result.success("系统异常");
 
@@ -431,14 +458,15 @@ public class ProjectController {
 
     }
 
-    @RequestMapping("/Build/Project/CreateStatus/Update")
-    public Result updateProjectCreateStatusById(String projectId,String createStatus){
+    @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/CreateStatus/Update")
+    public Result updateProjectCreateStatusById(String projectId, String createStatus) {
 
-        if(projectService.updateProjectCreateStatusById(projectId,Integer.parseInt(createStatus))){
+        if (projectService.updateProjectCreateStatusById(projectId, Integer.parseInt(createStatus))) {
 
             return Result.success("更新状态成功");
 
-        }else{
+        } else {
 
             return Result.success("更新状态失败");
 

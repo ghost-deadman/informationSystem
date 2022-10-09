@@ -1,6 +1,5 @@
 package com.example.informationSystem.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.informationSystem.entity.ProjectFile;
 import com.example.informationSystem.utils.Pager;
 
@@ -63,4 +62,12 @@ public interface ProjectFileService {
      * @return 数据
      */
     Pager<ProjectFile> selectProjectFileByUnit(String unitId, long page, long size);
+
+    /**
+     * 添加项目文件
+     * @param path 文件路径
+     * @param type 文件类型
+     * @param projectId 文件所属项目id
+     */
+    void addProjectFile(String path, Integer type, String projectId);
 }

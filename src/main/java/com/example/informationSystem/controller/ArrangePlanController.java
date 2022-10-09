@@ -9,9 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author pcdn
+ */
 @RestController
 @RequestMapping("/api/v1/arrangePlan")
 public class ArrangePlanController {
+
     @Autowired
     private ArrangePlanService arrangePlanService;
 
@@ -20,13 +24,13 @@ public class ArrangePlanController {
      * @param arrangePlanVO vo
      * @return 结果
      */
-    @PostMapping("/build/ArrangePlan/User/Insert")
+    @PostMapping("/Build/ArrangePlan/User/Insert")
     public Result insertPlan(@RequestBody ArrangePlanVO arrangePlanVO) {
         return arrangePlanService.insertPlan(arrangePlanVO);
 
     }
 
-    @GetMapping("/build/ArrangePlan/User/List")
+    @GetMapping("/Build/ArrangePlan/User/List")
     public Result userSelectById(String planId) {
         List<ArrangePlanDTO> listByProjectId = arrangePlanService.getListByProjectId(planId);
         if (listByProjectId == null) {
@@ -36,7 +40,7 @@ public class ArrangePlanController {
         }
     }
 
-    @GetMapping("/Cent/ArrangePlan/Admin/List")
+    @GetMapping("/Centralized/ArrangePlan/Admin/List")
     public Result adminSelectById(String planId) {
         List<ArrangePlanDTO> listByProjectId = arrangePlanService.getListByProjectId(planId);
         if (listByProjectId == null) {
