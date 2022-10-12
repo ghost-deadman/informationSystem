@@ -94,6 +94,15 @@ public class ProjectController {
 
     }
 
+    /**
+     * 项目单位分析
+     * @return Result对象
+     */
+    @RequestMapping("/Overall/project/UnitAnalysis")
+    public Result projectUnitAnalysis(){
+        return projectService.projectUnitAnalysis();
+    }
+
     @ApiOperation(value = "用户——更新项目数据")
     @PostMapping("/Build/Project/Id/Update")
     public Result updateProjectById(ProjectVO projectVO, @RequestParam(name = "file", required = false) List<MultipartFile> file) throws IOException {
@@ -149,12 +158,23 @@ public class ProjectController {
     }
 
     @ApiOperation(value = "用户——查询项目数据")
+    @GetMapping("/Build/Project/Id/Info")
+    public Result selectProjectById(String projectId){
+
+        ProjectDTO projectDto = projectService.selectProjectDtoByProjectId(projectId);
+
+        return Result.success("查询成功",projectDto);
+
+    }
+
+    @ApiOperation(value = "用户——查询项目数据")
     @GetMapping("/Build/Project/User/CreateStatus/Page/List")
     public Result selectProjectByUserIdAndCreateStatus(int createStatus, long currentPage, long pageSize) {
 
         String userId = loginService.getUserId();
 
         Pager<ProjectDTO> projectDtoPage = projectService.selectProjectDtoByUserIdAndCreateStatus(createStatus, userId, currentPage, pageSize);
+
 
         return Result.success("查询成功", projectDtoPage);
 
@@ -171,6 +191,8 @@ public class ProjectController {
         return Result.success("查询成功", projectDtoPage);
 
     }
+
+
 
     @ApiOperation(value = "用户——查询项目数据")
     @GetMapping("/Build/Project/User/Page/List")

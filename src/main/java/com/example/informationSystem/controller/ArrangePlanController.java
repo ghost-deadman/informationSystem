@@ -44,7 +44,7 @@ public class ArrangePlanController {
     @ApiOperation(value = "归口部门——查看用户的项目日志")
     @GetMapping("/Centralized/ArrangePlan/Admin/List")
     public Result adminSelectById(Integer current, Integer size, String projectId) {
-        Page<ArrangePlanDTO> listByProjectId = arrangePlanService.getListByProjectId(current, size, projectId);
+        Page<ArrangePlanDTO> listByProjectId = arrangePlanService.getListByProjectId(current, size,projectId);
         if (listByProjectId == null) {
             return Result.error("查询失败！");
         }else {

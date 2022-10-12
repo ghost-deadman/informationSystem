@@ -157,7 +157,7 @@ public class LoginServiceImpl extends ServiceImpl<UserMapper, User> implements L
         String userId = getUserId();
         Role role = redisCache.getCacheObject("role:" + userId);
         System.out.println("role: "+role);
-        return role.getUnit_id();
+        return role.getUnitId();
     }
 
     @Override

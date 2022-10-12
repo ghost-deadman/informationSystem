@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.example.informationSystem.entity.*;
 import com.example.informationSystem.entity.DTO.ProjectDTO;
+import com.example.informationSystem.entity.VO.ProjectUnitVO;
 import com.example.informationSystem.entity.VO.ProjectVO;
 import com.example.informationSystem.mapper.*;
+import com.example.informationSystem.service.ProjectProcessService;
 import com.example.informationSystem.service.ProjectService;
+import com.example.informationSystem.utils.GetStatusString;
 import com.example.informationSystem.utils.Pager;
+import com.example.informationSystem.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +42,12 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     private ApprovalOpinionMapper approvalOpinionMapper;
 
+    @Autowired
+    private UnitMapper unitMapper;
+
+    @Autowired
+    private ProjectProcessService projectProcessService;
+
 
     @Override
     public boolean addProject(ProjectVO projectVO, List<String> pathList) {
@@ -50,11 +60,32 @@ public class ProjectServiceImpl implements ProjectService {
 
         addProjectFileListData(pathList,projectVO.getProjectId());
 
+        projectProcessService.addProjectProcess(projectVO.getProjectId(),GetStatusString.getCreateProjectStatus(0));
         //更新草稿数据
         projectMapper.insert(projectVO);
 
         return true;
 
+    }
+
+    @Override
+    public Result projectUnitAnalysis() {
+        /*
+        对项目中的单位进行分析
+        1.首先查询所有单位表内的单位名称
+        2.然后查询对应项目对象单位的数量
+        3.将单位名称和数量一起封装返回
+         */
+        List<Unit> unitList = unitMapper.selectList(null);
+        List<ProjectUnitVO> projectUnitVOList = new ArrayList<>();
+        for(Unit unit :unitList){
+            int count = projectMapper.selectProjectUnitCount(unit.getName());
+            if(count == 0){
+                continue;
+            }
+            projectUnitVOList.add(new ProjectUnitVO(unit.getName(),count));
+        }
+        return Result.success("200",projectUnitVOList);
     }
 
     public void  addSubjectListData(List<String> subjectList,String projectId){
@@ -81,7 +112,7 @@ public class ProjectServiceImpl implements ProjectService {
 
             String fileName = path.substring(path.lastIndexOf("\\") + 1);
 
-            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectId, fileName, path);
+            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectId, fileName, path,0);
 
             projectFileMapper.insert(projectFile);
 
@@ -190,15 +221,64 @@ public class ProjectServiceImpl implements ProjectService {
 
         projectMapper.update(null,projectUpdateWrapper);
 
+        String status = GetStatusString.getCreateProjectStatus(createStatus);
+
+        projectProcessService.addProjectProcess(projectId,status);
+
+        return true;
+
+    }
+
+    @Override
+    public boolean updateProjectExecuteStatusById(String projectId, int executeStatus) {
+
+        UpdateWrapper<Project> projectUpdateWrapper = new UpdateWrapper<>();
+
+        projectUpdateWrapper.eq("project_id",projectId);
+
+        projectUpdateWrapper.set("execute_status",executeStatus);
+
+        projectMapper.update(null,projectUpdateWrapper);
+
+        projectProcessService.addProjectProcess(projectId,GetStatusString.getExecuteProjectStatus(executeStatus));
+
+        return true;
+    }
+
+    @Override
+    public boolean updateProjectCreateStatusToStartByIdList(List<String> projectIdList) {
+
+        for (String projectId : projectIdList) {
+
+            projectMapper.updateProjectCreateStatusToStartById(projectId);
+
+            projectProcessService.addProjectProcess(projectId,GetStatusString.getCreateProjectStatus(-1));
+
+        }
+
         return true;
 
     }
 
     public List<ProjectDTO> projectDtoSetSubjectData(List<ProjectDTO> projectDtoList){
 
-        List<Subject> subjectList = new ArrayList<>();
+        List<ProjectDTO> projectDTOList = new ArrayList<>();
 
         for(ProjectDTO projectDTO : projectDtoList){
+
+            projectDTO = projectDtoSetSubjectData(projectDTO);
+
+            projectDTOList.add(projectDTO);
+
+        }
+
+        return projectDTOList;
+
+    }
+
+    public ProjectDTO projectDtoSetSubjectData(ProjectDTO projectDTO){
+
+            List<Subject> subjectList = new ArrayList<>();
 
             QueryWrapper<ProjectSubject> projectSubjectQueryWrapper = new QueryWrapper<>();
 
@@ -208,7 +288,7 @@ public class ProjectServiceImpl implements ProjectService {
 
             for (ProjectSubject subjectId : subjectIdList) {
 
-                QueryWrapper<Subject> subjectQueryWrapper = new QueryWrapper<>();
+               QueryWrapper<Subject> subjectQueryWrapper = new QueryWrapper<>();
 
                 subjectQueryWrapper.eq("subject_id", subjectId.getSubjectId());
 
@@ -218,9 +298,7 @@ public class ProjectServiceImpl implements ProjectService {
 
             projectDTO.setSubjectList(subjectList);
 
-        }
-
-        return projectDtoList;
+            return projectDTO;
 
     }
 
@@ -296,6 +374,21 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectMapper.selectById(projectId);
 
         return project.getProjectUserId();
+
+    }
+
+    /**
+     * 通过项目id查询项目扩展对象
+     *
+     * @param projectId 项目id
+     * @return 项目扩展对象
+     */
+    @Override
+    public ProjectDTO selectProjectDtoByProjectId(String projectId) {
+
+        ProjectDTO projectDto = projectMapper.selectProjectByProjectId(projectId);
+
+        return  projectDtoSetSubjectData(projectDto);
 
     }
 

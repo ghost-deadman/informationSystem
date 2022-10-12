@@ -3,6 +3,7 @@ package com.example.informationSystem.service;
 import com.example.informationSystem.entity.DTO.ProjectDTO;
 import com.example.informationSystem.entity.VO.ProjectVO;
 import com.example.informationSystem.utils.Pager;
+import com.example.informationSystem.utils.Result;
 
 import java.util.List;
 
@@ -18,6 +19,13 @@ public interface ProjectService {
      * @return 是否成功
      */
     boolean addProject(ProjectVO projectVO, List<String> pathList);
+
+    /**
+     * 项目单位分析
+     * @return Result对象
+     */
+    Result projectUnitAnalysis();
+
 
     /**
      * 删除项目
@@ -81,6 +89,20 @@ public interface ProjectService {
     boolean updateProjectCreateStatusById(String projectId, int createStatus);
 
     /**
+     * 更新项目执行状态
+     * @param projectId 项目id
+     * @param executeStatus 状态
+     * @return 是否成功
+     */
+    boolean updateProjectExecuteStatusById(String projectId, int executeStatus);
+
+    /**
+     * 按项目id数组将项目还原为草稿状态
+     * @param projectIdList 项目id数组
+     * @return 是否成功
+     */
+    boolean updateProjectCreateStatusToStartByIdList(List<String> projectIdList);
+    /**
      * 通过单位和创建状态查询项目扩展类
      * @param createStatus 创建状态
      * @param unitId 单位id
@@ -115,4 +137,10 @@ public interface ProjectService {
      */
     String getProjectUserIdByProjectId(String projectId);
 
+    /**
+     * 通过项目id查询项目扩展对象
+     * @param projectId 项目id
+     * @return 项目扩展对象
+     */
+    ProjectDTO selectProjectDtoByProjectId(String projectId);
 }

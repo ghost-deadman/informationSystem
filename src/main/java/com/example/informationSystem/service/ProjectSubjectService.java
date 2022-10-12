@@ -1,6 +1,7 @@
 package com.example.informationSystem.service;
 
 import com.example.informationSystem.entity.ProjectSubject;
+import com.example.informationSystem.entity.VO.ProjectSubjectVO;
 
 import java.util.List;
 
@@ -40,4 +41,9 @@ public interface ProjectSubjectService {
      */
     List<ProjectSubject> selectProjectSubject();
 
+    /**
+     * 学科数据分析
+     * @return 学科数据VO
+     */
+    List<ProjectSubjectVO> subjectDataAnalysis();
 }

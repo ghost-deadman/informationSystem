@@ -29,16 +29,16 @@ public class Role implements Serializable {
     private String name;
 
     @ApiModelProperty(value = "标识")
-    private String role_key;
+    private String roleKey;
 
     @ApiModelProperty(value = "部门id")
-    private String unit_id;
+    private String unitId;
 
     @ApiModelProperty(value = "是否启用 0停用 1正常")
     private Boolean enabled;
 
     @ApiModelProperty(value = "是否删除 0正常 1删除")
-    private Boolean del_flag;
+    private Boolean delFlag;
 
     @ApiModelProperty(value = "备注")
     private String remark;

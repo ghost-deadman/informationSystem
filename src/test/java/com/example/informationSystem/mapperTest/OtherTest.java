@@ -12,7 +12,7 @@ public class OtherTest {
     @Test
     public void testBCryptPasswordEncoder() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encode = passwordEncoder.encode("123456");
+        String encode = passwordEncoder.encode("e10adc3949ba59abbe56e057f20f883e");
         System.out.println(encode);
         String encode1 = passwordEncoder.encode("1234");
         System.out.println(encode1);

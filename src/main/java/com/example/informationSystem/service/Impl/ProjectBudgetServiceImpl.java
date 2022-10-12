@@ -9,6 +9,8 @@ import com.example.informationSystem.mapper.ProjectBudgetMapper;
 import com.example.informationSystem.mapper.ProjectMapper;
 import com.example.informationSystem.service.LoginService;
 import com.example.informationSystem.service.ProjectBudgetService;
+import com.example.informationSystem.service.ProjectProcessService;
+import com.example.informationSystem.utils.GetStatusString;
 import com.example.informationSystem.utils.Result;
 import com.example.informationSystem.utils.TestVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class ProjectBudgetServiceImpl implements ProjectBudgetService {
     private ProjectMapper projectMapper;
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private ProjectProcessService projectProcessService;
 
     @Override
     public Result addProjectBudget(ProjectBudgetVO projectBudgetVO, Integer status) {
@@ -56,6 +61,8 @@ public class ProjectBudgetServiceImpl implements ProjectBudgetService {
                 project.setProjectBudgetId(id);
                 projectBudgetMapper.insert(projectBudget);
                 projectMapper.updateById(project);
+                //添加一个项目进度记录 状态为0
+                projectProcessService.addProjectProcess(project.getProjectId(), GetStatusString.getProjectBudgetStatus(0));
                 if (status == 0) {
                     return Result.success("保存成功");
                 } else {
@@ -65,7 +72,6 @@ public class ProjectBudgetServiceImpl implements ProjectBudgetService {
             }
         }
     }
-
 
     /**
      * 根据用户id分页查询某个状态的
@@ -125,7 +131,14 @@ public class ProjectBudgetServiceImpl implements ProjectBudgetService {
      */
     @Override
     public boolean checkProjectBudget(String pbId, Integer status) {
+
+        //添加一条项目预算记录
+        String projectId = projectMapper.getProjectIdByProjectBudgetId(pbId);
+
+        projectProcessService.addProjectProcess(projectId,GetStatusString.getProjectBudgetStatus(status));
+
         return projectBudgetMapper.checkProjectBudget(pbId, status);
+
     }
 
     /**

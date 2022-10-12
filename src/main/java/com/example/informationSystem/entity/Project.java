@@ -82,7 +82,7 @@ public class Project {
     private LocalDateTime createDate;
 
     /**
-     * 执行状态 0默认 1执行中 2结题成功 3结题失败
+     * 执行状态 0默认 1执行中 2结题中 3结题成功 3结题失败
      */
     @TableField(value = "execute_status")
     private Integer executeStatus;

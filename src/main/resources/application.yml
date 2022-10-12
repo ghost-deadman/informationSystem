@@ -68,7 +68,7 @@ mybatis-plus:
   # 配置Mybatis数据返回类型别名
   configuration:
     # 自动驼峰命名
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
 # Mybatis SQL日志输出  打印方法接口所在的包
 logging:
   level:

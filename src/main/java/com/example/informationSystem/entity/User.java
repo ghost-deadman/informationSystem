@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -95,19 +96,19 @@ public class User implements Serializable, UserDetails {
      */
     @ApiModelProperty(value = "创建者id")
     @TableField("CREATE_BY")
-    private Long createBy;
+    private String createBy;
     /**
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
     @TableField("CREATE_TIME")
-    private Date createTime;
+    private LocalDateTime createTime;
     /**
      * 更新人
      */
     @ApiModelProperty(value = "更新人")
     @TableField("UPDATE_BY")
-    private Long updateBy;
+    private String updateBy;
     /**
      * 更新时间
      */
@@ -134,7 +135,7 @@ public class User implements Serializable, UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         authorities = roles
                 .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole_key()))
+                .map(role -> new SimpleGrantedAuthority(role.getRoleKey()))
                 .collect(Collectors.toList());
         return authorities;
     }

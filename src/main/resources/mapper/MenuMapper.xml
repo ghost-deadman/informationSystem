@@ -20,7 +20,7 @@
         <collection property="roles" ofType="com.example.informationSystem.entity.Role">
             <id column="id" property="id" />
             <result column="name" property="name" />
-            <result column="role_key" property="role_key" />
+            <result column="role_key" property="roleKey" />
         </collection>
     </resultMap>
 

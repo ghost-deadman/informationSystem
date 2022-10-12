@@ -80,18 +80,29 @@ public class ProjectFileServiceImpl implements ProjectFileService {
 
     }
 
+    @Override
+    public void addProjectFile(String path, Integer type, String projectId) {
+
+            String fileName = path.substring(path.lastIndexOf("\\") + 1);
+
+            ProjectFile projectFile = getInformation(projectId, fileName, path,type);
+
+            projectFileMapper.insert(projectFile);
+
+    }
+
     /**
      * 获取文件相关信息存储项目文件对象中
      * @param fileName 文件名称
      * @return 项目文件对象
      */
-    public static ProjectFile getInformation(String projectId,String fileName, String path){
+    public static ProjectFile getInformation(String projectId,String fileName, String path,int type){
 
         ProjectFile projectFile = new ProjectFile();
 
         projectFile.setProjectId(projectId);
 
-        projectFile.setType(0);
+        projectFile.setType(type);
 
         projectFile.setProjectFileId(UUID.randomUUID().toString());
 

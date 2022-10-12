@@ -48,7 +48,7 @@ public class ProjectDraftServiceImpl implements ProjectDraftService {
 
             String fileName = path.substring(path.lastIndexOf("\\") + 1);
 
-            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectDraft.getProjectId(), fileName, path);
+            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectDraft.getProjectId(), fileName, path,0);
 
             projectFileMapper.insert(projectFile);
 
@@ -105,7 +105,7 @@ public class ProjectDraftServiceImpl implements ProjectDraftService {
 
             String fileName = path.substring(path.lastIndexOf("\\") + 1);
 
-            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectDraft.getProjectId(), fileName, path);
+            ProjectFile projectFile = ProjectFileServiceImpl.getInformation(projectDraft.getProjectId(), fileName, path,0);
 
             projectFileMapper.insert(projectFile);
 

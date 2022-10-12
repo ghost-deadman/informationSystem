@@ -8,6 +8,7 @@ import com.example.informationSystem.entity.VO.ArrangePlanVO;
 import com.example.informationSystem.mapper.ArrangePlanMapper;
 import com.example.informationSystem.mapper.ProjectMapper;
 import com.example.informationSystem.service.ArrangePlanService;
+import com.example.informationSystem.service.LoginService;
 import com.example.informationSystem.utils.Result;
 import com.example.informationSystem.utils.TestVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class ArrangePlanServiceImpl implements ArrangePlanService {
     private ProjectMapper projectMapper;
     @Autowired
     private ArrangePlanMapper arrangePlanMapper;
+    @Autowired
+    private LoginService loginService;
     /**
      * 插入资金使用记录
      *
@@ -48,8 +51,8 @@ public class ArrangePlanServiceImpl implements ArrangePlanService {
                 arrangePlan.setMoney(planVO.getMoney());
                 arrangePlan.setDescribes(planVO.getDescribes());
                 arrangePlan.setDate(planVO.getDate());
-                //TODO 获取当前用户id
-                String userId = "123456";
+                //获取当前用户id
+                String userId = loginService.getUserId();
                 arrangePlan.setPrincipalId(userId);
                 arrangePlan.setProjectId(planVO.getProjectId());
                 arrangePlan.setCreateTime(LocalDateTime.now());
@@ -62,6 +65,7 @@ public class ArrangePlanServiceImpl implements ArrangePlanService {
             }
         }
     }
+
 
     /**
      * 获取项目资金动向列表

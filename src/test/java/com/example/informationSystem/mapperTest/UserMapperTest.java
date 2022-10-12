@@ -44,6 +44,13 @@ public class UserMapperTest {
         }
     }
 
+    @Test
+    public void testUnit() {
+//        List<UserDTO> usersByUnitId = userMapper.getUsersByUnitId("1");
+//        for (UserDTO userDTO : usersByUnitId) {
+//            System.out.println(userDTO);
+//        }
+    }
 }
 
 

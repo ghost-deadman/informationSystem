@@ -22,6 +22,21 @@
 
     </resultMap>
 
+    <resultMap id="UserDTO" type="com.example.informationSystem.entity.DTO.UserDTO">
+        <id column="id" property="id" />
+        <result column="user_name" property="userName"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="sex" property="sex"/>
+        <result column="create_name" property="createName"/>
+        <result column="create_time" property="createTime"/>
+        <result column="email" property="email"/>
+        <result column="enable" property="enabled"/>
+        <collection property="myRoles" ofType="com.example.informationSystem.entity.DTO.RoleDTO">
+            <result property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_name, nick_name, password, enabled, email, phonenumber, sex, avatar, user_type, create_by, create_time, update_by, update_time, del_flag
@@ -33,4 +48,13 @@
         FROM sys_user
         WHERE user_name = #{userName}
     </select>
+
+    <select id="getUsersByUnitId" resultMap="UserDTO">
+        SELECT  u1.id, u1.user_name, u1.nick_name, u1.sex, u2.user_name as create_name, u1.create_time, u1.email, u1.enabled, r.id , r.name
+        FROM sys_user u1 right join sys_user u2 on u1.create_by = u2.id
+                         join sys_user_role sur on u1.id = sur.user_id
+                         join sys_role r on sur.role_id = r.id
+        WHERE r.unit_id = #{unitId}
+    </select>
+
 </mapper>
